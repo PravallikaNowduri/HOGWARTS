@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - Portfolio Management</title>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-navy-lighter: #2a3f5f;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-success: #22C55E;
+            --color-danger: #EF4444;
+            --color-warning: #F59E0B;
+            --color-info: #3B82F6;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(212, 175, 55, 0.2);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            width: 50px;
+            height: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            color: var(--color-gold);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .back-btn, .logout-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--color-info) 0%, #0EA5E9 100%);
+            color: var(--color-white);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, var(--color-danger) 0%, #DC2626 100%);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .back-btn:hover, .logout-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .back-btn:hover {
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+        }
+
+        .logout-btn:hover {
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-right: 2px solid var(--color-gold);
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 12px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--color-gold);
+            border-left-color: var(--color-gold);
+        }
+
+        .sidebar-menu a.active {
+            background-color: rgba(212, 175, 55, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            border-left-color: var(--color-gold);
+        }
+
+        /* CONTENT AREA */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-header h2 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .page-header p {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        /* CARDS GRID */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            border-color: var(--color-gold);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.95) 0%, rgba(10, 20, 40, 1) 100%);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+            border-radius: 8px;
+            font-size: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-gold);
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-white);
+            margin-bottom: 8px;
+        }
+
+        .card-label {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .stat-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--color-success);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .stat-badge.danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+        }
+
+        .stat-badge.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border: 2px solid var(--color-gold);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease-in-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            color: var(--color-gold);
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: var(--color-gold);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2);
+            color: var(--color-white);
+        }
+
+        .modal-body {
+            color: var(--color-text);
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 3px solid var(--color-gold);
+            border-radius: 6px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 18px;
+            color: var(--color-gold);
+            font-weight: 700;
+        }
+
+        .detail-value.white {
+            color: var(--color-white);
+        }
+
+        .chart-container {
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .pie-chart {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .pie-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pie-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
+        .pie-label {
+            font-size: 13px;
+            color: var(--color-text);
+        }
+
+        /* TABLE */
+        .table-container {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+            overflow-x: auto;
+            box-shadow: var(--shadow-md);
+        }
+
+        .table-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-gold);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--color-gold);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            color: var(--color-text);
+        }
+
+        tr:hover {
+            background-color: rgba(212, 175, 55, 0.05);
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, var(--color-gold) 0%, #E5C158 100%);
+            color: var(--color-navy);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-navy-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-gold);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E5C158;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .header {
+                padding: 16px 20px;
+            }
+
+            .header-title h1 {
+                font-size: 24px;
+            }
+
+            .sidebar {
+                width: 200px;
+                padding: 16px;
+            }
+
+            .content {
+                padding: 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid var(--color-gold);
+                display: flex;
+                overflow-x: auto;
+                padding: 12px;
+                max-height: 60px;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                gap: 8px;
+                white-space: nowrap;
+            }
+
+            .sidebar-menu li {
+                margin-bottom: 0;
+            }
+
+            .sidebar-menu a {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-right {
+                gap: 12px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .page-header h2 {
+                font-size: 24px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .back-btn, .logout-btn {
+                width: 100%;
+            }
+
+            .modal-content {
+                padding: 24px;
+                max-width: 90vw;
+            }
+
+            .detail-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px;
+            }
+
+            .header-title h1 {
+                font-size: 20px;
+            }
+
+            .back-btn, .logout-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+
+            .card-value {
+                font-size: 24px;
+            }
+
+            .table-title {
+                font-size: 16px;
+            }
+
+            th, td {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .modal-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/a279e29e-206b-441a-acc3-a3dc038c81f9" alt="Logo" class="header-logo">
+            <div class="header-title">
+                <h1>GryffinTwin</h1>
+                <p>Portfolio Management</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-name" id="userNameDisplay">Loading...</div>
+                <div class="user-email" id="userEmailDisplay">Loading...</div>
+            </div>
+            <div class="btn-group">
+                <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+                <button class="logout-btn" onclick="handleLogout()">⚡ Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a onclick="navigateTo('dashboard')">📊 Dashboard</a></li>
+                <li><a onclick="navigateTo('expenses')">💳 Expenses</a></li>
+                <li><a onclick="navigateTo('security')">🛡️ Security</a></li>
+                <li><a onclick="navigateTo('goals')">🎯 Goals</a></li>
+                <li><a onclick="navigateTo('analytics')">📈 Analytics</a></li>
+                <li><a class="active">💼 Portfolio</a></li>
+                <li><a onclick="navigateTo('myfam')">👨‍👩‍👧‍👦 MyFam</a></li>
+
+            </ul>
+        </aside>
+
+        <!-- CONTENT -->
+        <div class="content">   
+            <div class="page-header">
+                <h2>💼 Portfolio Management</h2>
+                <p>Click on any card to view detailed information</p>
+            </div>
+
+            <!-- SUMMARY CARDS (CLICKABLE) -->
+            <div class="cards-grid">
+                <!-- Total Value Card -->
+                <div class="card" onclick="showModal('totalValue')">
+                    <div class="card-header">
+                        <div class="card-icon">💰</div>
+                        <div class="card-title">Total Value</div>
+                    </div>
+                    <div class="card-value">$12,450</div>
+                    <div class="card-label">Current portfolio value</div>
+                    <span class="stat-badge">↑ 8.2% YTD</span>
+                </div>
+
+                <!-- Gains/Losses Card -->
+                <div class="card" onclick="showModal('gainsLosses')">
+                    <div class="card-header">
+                        <div class="card-icon">📈</div>
+                        <div class="card-title">Gains/Losses</div>
+                    </div>
+                    <div class="card-value">+$924</div>
+                    <div class="card-label">Year-to-date returns</div>
+                    <span class="stat-badge">↑ +7.9%</span>
+                </div>
+
+                <!-- Allocation Card -->
+                <div class="card" onclick="showModal('allocation')">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <div class="card-title">Allocation</div>
+                    </div>
+                    <div class="card-value">Balanced</div>
+                    <div class="card-label">Asset distribution</div>
+                    <span class="stat-badge">Optimal</span>
+                </div>
+
+                <!-- Diversification Card -->
+                <div class="card" onclick="showModal('diversification')">
+                    <div class="card-header">
+                        <div class="card-icon">📊</div>
+                        <div class="card-title">Diversification</div>
+                    </div>
+                    <div class="card-value">12</div>
+                    <div class="card-label">Assets in portfolio</div>
+                    <span class="stat-badge">Good</span>
+                </div>
+            </div>
+
+            <!-- HOLDINGS TABLE -->
+            <div class="table-container">
+                <div class="table-title">💼 Your Holdings (Click Edit for Details)</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Company</th>
+                            <th>Quantity</th>
+                            <th>Current Price</th>
+                            <th>Total Value</th>
+                            <th>Gain/Loss</th>
+                            <th>Return %</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>AAPL</strong></td>
+                            <td>Apple Inc.</td>
+                            <td>50</td>
+                            <td>$189.45</td>
+                            <td>$9,472.50</td>
+                            <td><span style="color: var(--color-success);">+$1,200</span></td>
+                            <td><span style="color: var(--color-success);">+14.5%</span></td>
+                            <td><button class="action-btn" onclick="showModal('holding-aapl')">View</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>GOOGL</strong></td>
+                            <td>Alphabet Inc.</td>
+                            <td>25</td>
+                            <td>$140.30</td>
+                            <td>$3,507.50</td>
+                            <td><span style="color: var(--color-success);">+$450</span></td>
+                            <td><span style="color: var(--color-success);">+14.7%</span></td>
+                            <td><button class="action-btn" onclick="showModal('holding-googl')">View</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>MSFT</strong></td>
+                            <td>Microsoft Corp.</td>
+                            <td>30</td>
+                            <td>$378.91</td>
+                            <td>$1,136.73</td>
+                            <td><span style="color: var(--color-danger);">-$120</span></td>
+                            <td><span style="color: var(--color-danger);">-9.5%</span></td>
+                            <td><button class="action-btn" onclick="showModal('holding-msft')">View</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>BOND-US</strong></td>
+                            <td>US Treasury Bond Fund</td>
+                            <td>100</td>
+                            <td>$102.40</td>
+                            <td>$10,240.00</td>
+                            <td><span style="color: var(--color-success);">+$80</span></td>
+                            <td><span style="color: var(--color-success);">+0.8%</span></td>
+                            <td><button class="action-btn" onclick="showModal('holding-bond')">View</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>VTI</strong></td>
+                            <td>Vanguard Total Market Index</td>
+                            <td>200</td>
+                            <td>$230.50</td>
+                            <td>$8,456.89</td>
+                            <td><span style="color: var(--color-success);">+$680</span></td>
+                            <td><span style="color: var(--color-success);">+8.7%</span></td>
+                            <td><button class="action-btn" onclick="showModal('holding-vti')">View</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>BRK.B</strong></td>
+                            <td>Berkshire Hathaway</td>
+                            <td>15</td>
+                            <td>$364.78</td>
+                            <td>$5,471.70</td>
+                            <td><span style="color: var(--color-success);">+$340</span></td>
+                            <td><span style="color: var(--color-success);">+6.6%</span></td>
+                            <td><button class="action-btn" onclick="showModal('holding-brk')">View</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    
+    <!-- Total Value Modal -->
+    <div class="modal" id="modal-totalValue">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">💰 Total Portfolio Value</div>
+                <button class="close-btn" onclick="closeModal('totalValue')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Portfolio Value</span>
+                        <span class="detail-value">$12,450.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Initial Investment</span>
+                        <span class="detail-value white">$11,526.00</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Total Gain</span>
+                        <span class="detail-value">+$924.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Return %</span>
+                        <span class="detail-value">+8.2%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Number of Holdings</span>
+                        <span class="detail-value white">6</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Last Updated</span>
+                        <span class="detail-value white">Today 2:45 PM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gains/Losses Modal -->
+    <div class="modal" id="modal-gainsLosses">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📈 Gains & Losses Breakdown</div>
+                <button class="close-btn" onclick="closeModal('gainsLosses')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Year-to-Date Gain</span>
+                        <span class="detail-value">+$924.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">YTD Return %</span>
+                        <span class="detail-value">+7.9%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Best Performer</span>
+                        <span class="detail-value white">GOOGL (+14.7%)</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Worst Performer</span>
+                        <span class="detail-value white">MSFT (-9.5%)</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Winning Positions</span>
+                        <span class="detail-value">5</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Losing Positions</span>
+                        <span class="detail-value white">1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Allocation Modal -->
+    <div class="modal" id="modal-allocation">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🎯 Asset Allocation</div>
+                <button class="close-btn" onclick="closeModal('allocation')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Allocation Type</span>
+                        <span class="detail-value white">Balanced</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">Optimal</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div style="font-weight: 600; color: var(--color-gold); margin-bottom: 12px;">Distribution Breakdown</div>
+                    <div class="pie-chart">
+                        <div class="pie-item">
+                            <div class="pie-color" style="background: #22C55E;"></div>
+                            <span class="pie-label">Stocks: 60% ($7,470)</span>
+                        </div>
+                        <div class="pie-item">
+                            <div class="pie-color" style="background: #3B82F6;"></div>
+                            <span class="pie-label">Bonds: 40% ($4,980)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row" style="margin-top: 20px;">
+                    <div class="detail-item">
+                        <span class="detail-label">Stocks Value</span>
+                        <span class="detail-value white">$7,470.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Bonds Value</span>
+                        <span class="detail-value white">$4,980.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diversification Modal -->
+    <div class="modal" id="modal-diversification">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📊 Portfolio Diversification</div>
+                <button class="close-btn" onclick="closeModal('diversification')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Total Assets</span>
+                        <span class="detail-value">12</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Diversification Score</span>
+                        <span class="detail-value">8.5/10</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Asset Classes</span>
+                        <span class="detail-value white">3</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Sectors Covered</span>
+                        <span class="detail-value white">5</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div style="font-weight: 600; color: var(--color-gold); margin-bottom: 12px;">Asset Breakdown</div>
+                    <div class="pie-chart">
+                        <div class="pie-item">
+                            <div class="pie-color" style="background: #D4AF37;"></div>
+                            <span class="pie-label">Tech: 45%</span>
+                        </div>
+                        <div class="pie-item">
+                            <div class="pie-color" style="background: #22C55E;"></div>
+                            <span class="pie-label">Finance: 25%</span>
+                        </div>
+                        <div class="pie-item">
+                            <div class="pie-color" style="background: #3B82F6;"></div>
+                            <span class="pie-label">Bonds: 30%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stock Detail Modals -->
+    <!-- AAPL Modal -->
+    <div class="modal" id="modal-holding-aapl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🍎 Apple Inc. (AAPL)</div>
+                <button class="close-btn" onclick="closeModal('holding-aapl')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Shares Owned</span>
+                        <span class="detail-value white">50</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Price</span>
+                        <span class="detail-value">$189.45</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Total Value</span>
+                        <span class="detail-value white">$9,472.50</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Cost Basis</span>
+                        <span class="detail-value white">$8,272.50</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Gain/Loss</span>
+                        <span class="detail-value">+$1,200.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Return %</span>
+                        <span class="detail-value">+14.5%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Sector</span>
+                        <span class="detail-value white">Technology</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">52-Week High</span>
+                        <span class="detail-value white">$199.62</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GOOGL Modal -->
+    <div class="modal" id="modal-holding-googl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🔍 Alphabet Inc. (GOOGL)</div>
+                <button class="close-btn" onclick="closeModal('holding-googl')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Shares Owned</span>
+                        <span class="detail-value white">25</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Price</span>
+                        <span class="detail-value">$140.30</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Total Value</span>
+                        <span class="detail-value white">$3,507.50</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Cost Basis</span>
+                        <span class="detail-value white">$3,057.50</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Gain/Loss</span>
+                        <span class="detail-value">+$450.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Return %</span>
+                        <span class="detail-value">+14.7%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Sector</span>
+                        <span class="detail-value white">Technology</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">52-Week High</span>
+                        <span class="detail-value white">$152.84</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MSFT Modal -->
+    <div class="modal" id="modal-holding-msft">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">💻 Microsoft Corp. (MSFT)</div>
+                <button class="close-btn" onclick="closeModal('holding-msft')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Shares Owned</span>
+                        <span class="detail-value white">30</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Price</span>
+                        <span class="detail-value">$378.91</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Total Value</span>
+                        <span class="detail-value white">$1,136.73</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Cost Basis</span>
+                        <span class="detail-value white">$1,256.73</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Gain/Loss</span>
+                        <span class="detail-value" style="color: var(--color-danger);">-$120.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Return %</span>
+                        <span class="detail-value" style="color: var(--color-danger);">-9.5%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Sector</span>
+                        <span class="detail-value white">Technology</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">52-Week High</span>
+                        <span class="detail-value white">$416.49</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOND Modal -->
+    <div class="modal" id="modal-holding-bond">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🏛️ US Treasury Bond Fund (BOND-US)</div>
+                <button class="close-btn" onclick="closeModal('holding-bond')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Units Owned</span>
+                        <span class="detail-value white">100</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Price</span>
+                        <span class="detail-value">$102.40</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Total Value</span>
+                        <span class="detail-value white">$10,240.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Cost Basis</span>
+                        <span class="detail-value white">$10,160.00</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Gain/Loss</span>
+                        <span class="detail-value">+$80.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Return %</span>
+                        <span class="detail-value">+0.8%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Asset Class</span>
+                        <span class="detail-value white">Fixed Income</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Yield</span>
+                        <span class="detail-value white">4.5%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VTI Modal -->
+    <div class="modal" id="modal-holding-vti">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📊 Vanguard Total Market Index (VTI)</div>
+                <button class="close-btn" onclick="closeModal('holding-vti')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Shares Owned</span>
+                        <span class="detail-value white">200</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Price</span>
+                        <span class="detail-value">$230.50</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Total Value</span>
+                        <span class="detail-value white">$8,456.89</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Cost Basis</span>
+                        <span class="detail-value white">$7,776.89</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Gain/Loss</span>
+                        <span class="detail-value">+$680.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Return %</span>
+                        <span class="detail-value">+8.7%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Fund Type</span>
+                        <span class="detail-value white">Index Fund</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Expense Ratio</span>
+                        <span class="detail-value white">0.03%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BRK.B Modal -->
+    <div class="modal" id="modal-holding-brk">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🏢 Berkshire Hathaway (BRK.B)</div>
+                <button class="close-btn" onclick="closeModal('holding-brk')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Shares Owned</span>
+                        <span class="detail-value white">15</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Price</span>
+                        <span class="detail-value">$364.78</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Total Value</span>
+                        <span class="detail-value white">$5,471.70</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Cost Basis</span>
+                        <span class="detail-value white">$5,131.70</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Gain/Loss</span>
+                        <span class="detail-value">+$340.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Return %</span>
+                        <span class="detail-value">+6.6%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Sector</span>
+                        <span class="detail-value white">Financials</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">52-Week High</span>
+                        <span class="detail-value white">$387.99</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication on page load
+        window.addEventListener('load', function() {
+            const sessionData = sessionStorage.getItem('gryffinTwinSession') || localStorage.getItem('gryffinTwinSession');
+            
+            if (!sessionData) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = JSON.parse(sessionData);
+            document.getElementById('userNameDisplay').textContent = user.name;
+            document.getElementById('userEmailDisplay').textContent = user.email;
+        });
+
+        function showModal(modalId) {
+            const modal = document.getElementById('modal-' + modalId);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById('modal-' + modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Close modal when clicking outside content
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            }
+        });
+
+        function goBack() {
+            window.location.href = 'dashboard.html';
+        }
+
+        function navigateTo(page) {
+            const pageMap = {
+                'dashboard': 'dashboard.html',
+                'expenses': 'expenses.html',
+                'security': 'security.html',
+                'goals': 'goals.html',
+                'analytics': 'analytics.html',
+                'myfam': 'myfam.html',
+                'portfolio': 'portfolio.html'
+            };
+
+            if (pageMap[page]) {
+                window.location.href = pageMap[page];
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('gryffinTwinSession');
+                localStorage.removeItem('gryffinTwinSession');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

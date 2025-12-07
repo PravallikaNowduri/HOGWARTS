@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - Financial Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2158aa;
+            --secondary: #1e88e5;
+            --success: #43a047;
+            --warning: #fb8c00;
+            --danger: #e53935;
+            --light: #f5f5f5;
+            --dark: #212121;
+            --text: #424242;
+            --border: #e0e0e0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .logo {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            border-left-color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            overflow-y: auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: var(--dark);
+        }
+
+        .user-menu {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1a469f;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #1565c0;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c62828;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .page {
+            display: none;
+            padding: 30px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-change {
+            font-size: 12px;
+            margin-top: 5px;
+            color: var(--success);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(33, 88, 170, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: var(--light);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover {
+            background: var(--light);
+        }
+
+        /* Progress Bar */
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .close {
+            cursor: pointer;
+            float: right;
+            font-size: 24px;
+            color: #666;
+        }
+
+        .close:hover {
+            color: var(--dark);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .alert-error {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        /* Auth Page */
+        .auth-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        .auth-box {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            color: var(--dark);
+        }
+
+        .auth-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: var(--light);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .goal-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .goal-item.paused {
+            border-left-color: var(--warning);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .status-paused {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Auth Page -->
+<div id="authPage" class="page active">
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-title">🏰 GryffinTwin</div>
+            <div class="auth-subtitle">Financial Magic Awaits</div>
+            
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" onclick="switchTab('register')">Register</button>
+            </div>
+
+            <div id="loginTab" class="tab-content active">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password">
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="handleLogin()">Login</button>
+            </div>
+
+            <div id="registerTab" class="tab-content">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="registerName" placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="registerEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="registerPassword" placeholder="Create password">
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="handleRegister()">Register</button>
+            </div>
+
+            <div id="authAlert" class="alert"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Main App -->
+<div id="appContainer" class="page" style="padding: 0;">
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">🏰 GryffinTwin</div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a class="nav-link active" onclick="switchPage('dashboard')">📊 Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchPage('expenses')">💳 Expenses</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchPage('goals')">🎯 Goals</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchPage('analytics')">📈 Analytics</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchPage('security')">🔒 Security</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="handleLogout()">🚪 Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="user-menu">
+                    <span id="userName">User</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="page active">
+                <div id="dashboardAlert" class="alert"></div>
+                
+                <div class="grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Total Balance</div>
+                        <div class="stat-value" id="dashBalance">$0</div>
+                        <div class="stat-change">↑ Across all accounts</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">This Month Expenses</div>
+                        <div class="stat-value" id="dashExpenses">$0</div>
+                        <div class="stat-change">Monthly spending</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Income</div>
+                        <div class="stat-value" id="dashIncome">$0</div>
+                        <div class="stat-change">Total income</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Goals Progress</div>
+                        <div class="stat-value" id="dashGoals">0%</div>
+                        <div class="stat-change" id="dashGoalsCount">0 active</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Quick Actions</div>
+                    <button class="btn btn-secondary" onclick="openAddExpense()">➕ Add Expense</button>
+                    <button class="btn btn-secondary" style="margin-left: 10px;" onclick="openAddGoal()">➕ Add Goal</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Recent Transactions</div>
+                    <div id="recentTransactions">No transactions</div>
+                </div>
+            </div>
+
+            <!-- Expenses Page -->
+            <div id="expensesPage" class="page">
+                <div id="expensesAlert" class="alert"></div>
+                
+                <div class="card">
+                    <div class="card-title">Add New Expense</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="expenseCategory">
+                                <option>🍔 Food & Dining</option>
+                                <option>🚗 Transportation</option>
+                                <option>🛒 Shopping</option>
+                                <option>🎬 Entertainment</option>
+                                <option>💊 Healthcare</option>
+                                <option>📚 Education</option>
+                                <option>📱 Utilities</option>
+                                <option>🎮 Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount ($)</label>
+                            <input type="number" id="expenseAmount" placeholder="0.00" step="0.01">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="expenseDescription" placeholder="What did you spend on?">
+                    </div>
+                    <button class="btn btn-primary" onclick="addExpense()">Add Expense</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Expense Summary</div>
+                    <div>Total This Month: <strong id="expenseTotal">$0</strong></div>
+                    <div>Budget: <strong>$4,200</strong></div>
+                    <div>Remaining: <strong id="expenseRemaining">$4,200</strong></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Recent Expenses</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenseList">
+                            <tr><td colspan="5">No expenses yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Goals Page -->
+            <div id="goalsPage" class="page">
+                <div id="goalsAlert" class="alert"></div>
+                
+                <div class="card">
+                    <div class="card-title">Add New Goal</div>
+                    <div class="form-group">
+                        <label>Goal Name</label>
+                        <input type="text" id="goalName" placeholder="e.g., Vacation Fund">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="goalDescription" placeholder="What is this goal for?">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Target Amount ($)</label>
+                            <input type="number" id="goalTarget" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Current Amount ($)</label>
+                            <input type="number" id="goalCurrent" placeholder="0.00" step="0.01" value="0">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="addGoal()">Create Goal</button>
+                </div>
+
+                <div id="goalsList">
+                    <div class="card">
+                        <div class="card-title">No Goals</div>
+                        <p>Create your first financial goal to get started!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div id="analyticsPage" class="page">
+                <div id="analyticsAlert" class="alert"></div>
+                
+                <div class="grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Total Income</div>
+                        <div class="stat-value" id="analyticsIncome">$0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Total Expenses</div>
+                        <div class="stat-value" id="analyticsExpenses">$0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Net Savings</div>
+                        <div class="stat-value" id="analyticsSavings">$0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Savings Rate</div>
+                        <div class="stat-value" id="analyticsSavingsRate">0%</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Spending by Category</div>
+                    <div id="categoryBreakdown">
+                        <p>No data available</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Page -->
+            <div id="securityPage" class="page">
+                <div id="securityAlert" class="alert"></div>
+                
+                <div class="grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Overall Security</div>
+                        <div class="stat-value" id="securityStatus">✓ Excellent</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Active Alerts</div>
+                        <div class="stat-value" id="securityAlerts">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Two-Factor Auth</div>
+                        <div class="stat-value">✓ Enabled</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Security Features</div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 10px; border-bottom: 1px solid var(--border);">✓ Real-Time Fraud Monitoring</li>
+                        <li style="padding: 10px; border-bottom: 1px solid var(--border);">✓ Biometric Authentication</li>
+                        <li style="padding: 10px; border-bottom: 1px solid var(--border);">✓ Device Management</li>
+                        <li style="padding: 10px; border-bottom: 1px solid var(--border);">✓ Transaction Alerts</li>
+                        <li style="padding: 10px; border-bottom: 1px solid var(--border);">✓ SSL Encryption</li>
+                        <li style="padding: 10px;">✓ Suspicious Activity Alerts</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Recent Security Events</div>
+                    <div id="securityEvents">No recent events</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Expense Modal -->
+<div id="expenseModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('expenseModal')">&times;</span>
+        <div class="modal-header">Add Expense</div>
+        <div class="form-group">
+            <label>Category</label>
+            <select id="modalExpenseCategory">
+                <option>🍔 Food & Dining</option>
+                <option>🚗 Transportation</option>
+                <option>🛒 Shopping</option>
+                <option>🎬 Entertainment</option>
+                <option>💊 Healthcare</option>
+                <option>📚 Education</option>
+                <option>📱 Utilities</option>
+                <option>🎮 Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Amount ($)</label>
+            <input type="number" id="modalExpenseAmount" placeholder="0.00" step="0.01">
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="modalExpenseDescription" placeholder="What did you spend on?">
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('expenseModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="addExpenseFromModal()">Add</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Goal Modal -->
+<div id="goalModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('goalModal')">&times;</span>
+        <div class="modal-header">Add Goal</div>
+        <div class="form-group">
+            <label>Goal Name</label>
+            <input type="text" id="modalGoalName" placeholder="e.g., Vacation Fund">
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="modalGoalDescription" placeholder="What is this goal for?">
+        </div>
+        <div class="form-group">
+            <label>Target Amount ($)</label>
+            <input type="number" id="modalGoalTarget" placeholder="0.00" step="0.01">
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('goalModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="addGoalFromModal()">Create</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Config
+    const API_URL = 'http://localhost:8000/api';
+    let currentUser = null;
+
+    // Auth Functions
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tab + 'Tab').classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    async function handleLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        if (!email || !password) {
+            showAlert('authAlert', 'Please fill all fields', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (!response.ok) throw new Error('Login failed');
+            
+            const user = await response.json();
+            currentUser = user;
+            localStorage.setItem('user', JSON.stringify(user));
+            switchToApp();
+        } catch (error) {
+            showAlert('authAlert', 'Invalid credentials', 'error');
+        }
+    }
+
+    async function handleRegister() {
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+
+        if (!name || !email || !password) {
+            showAlert('authAlert', 'Please fill all fields', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/auth/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            if (!response.ok) throw new Error('Registration failed');
+            
+            const user = await response.json();
+            currentUser = user;
+            localStorage.setItem('user', JSON.stringify(user));
+            showAlert('authAlert', 'Registration successful! Welcome!', 'success');
+            setTimeout(switchToApp, 1000);
+        } catch (error) {
+            showAlert('authAlert', 'Registration failed. Email might already exist.', 'error');
+        }
+    }
+
+    function switchToApp() {
+        document.getElementById('authPage').style.display = 'none';
+        document.getElementById('appContainer').style.display = 'block';
+        document.getElementById('userName').textContent = currentUser.name;
+        loadDashboard();
+    }
+
+    function handleLogout() {
+        currentUser = null;
+        localStorage.removeItem('user');
+        location.reload();
+    }
+
+    // Page Navigation
+    function switchPage(page) {
+        document.querySelectorAll('[id$="Page"]').forEach(el => el.classList.remove('active'));
+        document.getElementById(page + 'Page').classList.add('active');
+        document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('pageTitle').textContent = 
+            page === 'dashboard' ? 'Dashboard' :
+            page === 'expenses' ? 'Expenses' :
+            page === 'goals' ? 'Goals' :
+            page === 'analytics' ? 'Analytics' : 'Security';
+
+        if (page === 'dashboard') loadDashboard();
+        if (page === 'expenses') loadExpenses();
+        if (page === 'goals') loadGoals();
+        if (page === 'analytics') loadAnalytics();
+        if (page === 'security') loadSecurity();
+    }
+
+    // Dashboard
+    async function loadDashboard() {
+        try {
+            const response = await fetch(`${API_URL}/dashboard/${currentUser.id}`);
+            const data = await response.json();
+            document.getElementById('dashBalance').textContent = `$${data.balance.toFixed(2)}`;
+            document.getElementById('dashExpenses').textContent = `$${data.total_expenses.toFixed(2)}`;
+            document.getElementById('dashIncome').textContent = `$${data.total_income.toFixed(2)}`;
+            document.getElementById('dashGoals').textContent = `${data.goal_progress}%`;
+            document.getElementById('dashGoalsCount').textContent = `${data.active_goals} active`;
+        } catch (error) {
+            showAlert('dashboardAlert', 'Error loading dashboard', 'error');
+        }
+    }
+
+    // Expenses
+    async function loadExpenses() {
+        try {
+            const response = await fetch(`${API_URL}/expenses/${currentUser.id}`);
+            const data = await response.json();
+            document.getElementById('expenseTotal').textContent = `$${data.total.toFixed(2)}`;
+            document.getElementById('expenseRemaining').textContent = `$${(4200 - data.total).toFixed(2)}`;
+            
+            const tbody = document.getElementById('expenseList');
+            tbody.innerHTML = data.expenses.length === 0 ? '<tr><td colspan="5">No expenses yet</td></tr>' : '';
+            
+            data.expenses.forEach(expense => {
+                const row = `<tr>
+                    <td>${new Date(expense.date).toLocaleDateString()}</td>
+                    <td>${expense.category}</td>
+                    <td>${expense.description}</td>
+                    <td>-$${expense.amount.toFixed(2)}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteExpense(${expense.id})">Delete</button></td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        } catch (error) {
+            showAlert('expensesAlert', 'Error loading expenses', 'error');
+        }
+    }
+
+    async function addExpense() {
+        const category = document.getElementById('expenseCategory').value;
+        const amount = document.getElementById('expenseAmount').value;
+        const description = document.getElementById('expenseDescription').value;
+
+        if (!category || !amount || !description) {
+            showAlert('expensesAlert', 'Please fill all fields', 'error');
+            return;
+        }
+
+        try {
+            await fetch(`${API_URL}/expenses/${currentUser.id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ category, amount: parseFloat(amount), description })
+            });
+            showAlert('expensesAlert', 'Expense added successfully!', 'success');
+            document.getElementById('expenseAmount').value = '';
+            document.getElementById('expenseDescription').value = '';
+            loadExpenses();
+        } catch (error) {
+            showAlert('expensesAlert', 'Error adding expense', 'error');
+        }
+    }
+
+    function openAddExpense() {
+        document.getElementById('expenseModal').classList.add('active');
+    }
+
+    function addExpenseFromModal() {
+        document.getElementById('expenseCategory').value = document.getElementById('modalExpenseCategory').value;
+        document.getElementById('expenseAmount').value = document.getElementById('modalExpenseAmount').value;
+        document.getElementById('expenseDescription').value = document.getElementById('modalExpenseDescription').value;
+        addExpense();
+        closeModal('expenseModal');
+    }
+
+    async function deleteExpense(id) {
+        if (!confirm('Delete this expense?')) return;
+        try {
+            await fetch(`${API_URL}/expenses/${id}`, { method: 'DELETE' });
+            loadExpenses();
+            showAlert('expensesAlert', 'Expense deleted!', 'success');
+        } catch (error) {
+            showAlert('expensesAlert', 'Error deleting expense', 'error');
+        }
+    }
+
+    // Goals
+    async function loadGoals() {
+        try {
+            const response = await fetch(`${API_URL}/goals/${currentUser.id}`);
+            const goals = await response.json();
+            
+            if (goals.length === 0) {
+                document.getElementById('goalsList').innerHTML = '<div class="card"><p>No goals yet. Create one to get started!</p></div>';
+                return;
+            }
+
+            document.getElementById('goalsList').innerHTML = goals.map(goal => `
+                <div class="goal-item ${goal.status === 'Paused' ? 'paused' : ''}">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 style="margin: 0 0 5px 0;">${goal.name}</h3>
+                            <p style="margin: 0; color: #666; font-size: 14px;">${goal.description}</p>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: ${goal.progress}%"></div>
+                            </div>
+                            <div style="font-size: 13px; color: #666; margin-top: 5px;">
+                                $${goal.current_amount.toFixed(2)} / $${goal.target_amount.toFixed(2)} (${goal.progress}%)
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge ${goal.status === 'Active' ? 'status-active' : 'status-paused'}">${goal.status}</span>
+                            <button class="btn btn-danger btn-sm" style="margin-top: 10px;" onclick="deleteGoal(${goal.id})">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            showAlert('goalsAlert', 'Error loading goals', 'error');
+        }
+    }
+
+    async function addGoal() {
+        const name = document.getElementById('goalName').value;
+        const description = document.getElementById('goalDescription').value;
+        const target_amount = document.getElementById('goalTarget').value;
+
+        if (!name || !description || !target_amount) {
+            showAlert('goalsAlert', 'Please fill all fields', 'error');
+            return;
+        }
+
+        try {
+            await fetch(`${API_URL}/goals/${currentUser.id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, description, target_amount: parseFloat(target_amount) })
+            });
+            showAlert('goalsAlert', 'Goal created successfully!', 'success');
+            document.getElementById('goalName').value = '';
+            document.getElementById('goalDescription').value = '';
+            document.getElementById('goalTarget').value = '';
+            loadGoals();
+        } catch (error) {
+            showAlert('goalsAlert', 'Error creating goal', 'error');
+        }
+    }
+
+    function openAddGoal() {
+        document.getElementById('goalModal').classList.add('active');
+    }
+
+    function addGoalFromModal() {
+        document.getElementById('goalName').value = document.getElementById('modalGoalName').value;
+        document.getElementById('goalDescription').value = document.getElementById('modalGoalDescription').value;
+        document.getElementById('goalTarget').value = document.getElementById('modalGoalTarget').value;
+        addGoal();
+        closeModal('goalModal');
+    }
+
+    async function deleteGoal(id) {
+        if (!confirm('Delete this goal?')) return;
+        try {
+            await fetch(`${API_URL}/goals/${id}`, { method: 'DELETE' });
+            loadGoals();
+            showAlert('goalsAlert', 'Goal deleted!', 'success');
+        } catch (error) {
+            showAlert('goalsAlert', 'Error deleting goal', 'error');
+        }
+    }
+
+    // Analytics
+    async function loadAnalytics() {
+        try {
+            const response = await fetch(`${API_URL}/analytics/${currentUser.id}`);
+            const data = await response.json();
+            
+            document.getElementById('analyticsIncome').textContent = `$${data.total_income.toFixed(2)}`;
+            document.getElementById('analyticsExpenses').textContent = `$${data.total_expenses.toFixed(2)}`;
+            document.getElementById('analyticsSavings').textContent = `$${data.net_savings.toFixed(2)}`;
+            document.getElementById('analyticsSavingsRate').textContent = `${data.savings_rate}%`;
+
+            const categories = Object.entries(data.category_breakdown);
+            if (categories.length === 0) {
+                document.getElementById('categoryBreakdown').innerHTML = '<p>No spending data yet</p>';
+                return;
+            }
+
+            document.getElementById('categoryBreakdown').innerHTML = categories.map(([cat, amount]) => 
+                `<div style="margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>${cat}</span>
+                        <strong>$${amount.toFixed(2)}</strong>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: ${(amount / data.total_expenses * 100)}%"></div>
+                    </div>
+                </div>`
+            ).join('');
+        } catch (error) {
+            showAlert('analyticsAlert', 'Error loading analytics', 'error');
+        }
+    }
+
+    // Security
+    async function loadSecurity() {
+        try {
+            const response = await fetch(`${API_URL}/security/${currentUser.id}`);
+            const data = await response.json();
+            
+            document.getElementById('securityStatus').textContent = data.security_status === 'Excellent' ? '✓ Excellent' : '⚠️ Warning';
+            document.getElementById('securityAlerts').textContent = data.unresolved_alerts;
+            
+            if (data.recent_alerts.length === 0) {
+                document.getElementById('securityEvents').innerHTML = '<p>No recent security events</p>';
+            } else {
+                document.getElementById('securityEvents').innerHTML = data.recent_alerts.map(alert => 
+                    `<div style="padding: 10px; border-bottom: 1px solid #e0e0e0;">
+                        <strong>${alert.type}</strong><br>
+                        ${alert.message}<br>
+                        <small>${new Date(alert.timestamp).toLocaleString()}</small>
+                    </div>`
+                ).join('');
+            }
+        } catch (error) {
+            showAlert('securityAlert', 'Error loading security data', 'error');
+        }
+    }
+
+    // Utilities
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+
+    function showAlert(elementId, message, type) {
+        const alert = document.getElementById(elementId);
+        alert.textContent = message;
+        alert.className = `alert show alert-${type}`;
+        setTimeout(() => alert.classList.remove('show'), 3000);
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+        const savedUser = localStorage.getItem('user');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            switchToApp();
+        }
+    });
+
+    // Close modals on outside click
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.classList.remove('active');
+        }
+    }
+</script>
+
+</body>
+</html>

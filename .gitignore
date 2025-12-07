@@ -1,0 +1,27 @@
+# Environment and editor
+.vscode/
+.idea/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+**/venv/
+.venv/
+env/
+ENV/
+
+# Node
+node_modules/
+
+# Ignore nested repository and large generated folders
+HOGWARTS/gringotts-financial-twin/
+HOGWARTS/frontend/apitemplates/venv/
+
+# OS files
+Thumbs.db
+desktop.ini

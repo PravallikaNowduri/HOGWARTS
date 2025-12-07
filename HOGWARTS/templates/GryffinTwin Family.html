@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - My Family</title>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-danger: #EF4444;
+            --color-info: #3B82F6;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .navbar-brand:hover {
+            transform: translateY(-2px);
+        }
+
+        .navbar-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--color-gold);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--color-navy);
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .navbar-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-gold);
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            list-style: none;
+        }
+
+        .navbar-menu a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .navbar-menu a:hover,
+        .navbar-menu a.active {
+            color: var(--color-gold);
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .navbar-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 16px;
+            right: 16px;
+            height: 2px;
+            background: var(--color-gold);
+            border-radius: 1px;
+        }
+
+        .logout-btn {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid var(--color-danger);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background-color: var(--color-danger);
+            color: var(--color-white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* MAIN CONTENT */
+        .container {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        /* ACTION BUTTONS */
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-gold) 0%, #E5C158 100%);
+            color: var(--color-navy);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--color-gold);
+            border: 1px solid var(--color-gold);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(212, 175, 55, 0.3);
+        }
+
+        /* CARD STYLES */
+        .card {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, rgba(26, 37, 64, 0.5) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+
+        .card:hover {
+            border-color: var(--color-gold);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .card-title {
+            font-size: 18px;
+            color: var(--color-gold);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* FAMILY MEMBERS GRID */
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* MEMBER CARD */
+        .member-card {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, rgba(26, 37, 64, 0.5) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .member-card:hover {
+            border-color: var(--color-gold);
+            box-shadow: 0 12px 32px rgba(212, 175, 55, 0.2);
+            transform: translateY(-8px);
+        }
+
+        .member-avatar {
+            font-size: 56px;
+            margin-bottom: 16px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .member-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 4px;
+        }
+
+        .member-role {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--color-gold);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .member-email {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 12px;
+            word-break: break-all;
+        }
+
+        .member-spent {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-gold);
+            margin-bottom: 16px;
+        }
+
+        .member-spent-label {
+            font-size: 11px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .member-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .member-btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+        }
+
+        .member-btn-view {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--color-gold);
+            border: 1px solid var(--color-gold);
+        }
+
+        .member-btn-view:hover {
+            background: rgba(212, 175, 55, 0.3);
+        }
+
+        .member-btn-remove {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger);
+        }
+
+        .member-btn-remove:hover {
+            background: var(--color-danger);
+            color: var(--color-white);
+        }
+
+        /* EXPENSES TABLE */
+        .expenses-section {
+            margin-top: 32px;
+        }
+
+        .expenses-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .expenses-table th {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--color-gold);
+            padding: 16px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .expenses-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            color: var(--color-text);
+            font-size: 14px;
+        }
+
+        .expenses-table tr:hover {
+            background-color: rgba(212, 175, 55, 0.05);
+        }
+
+        .expense-member {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .expense-member-avatar {
+            font-size: 24px;
+        }
+
+        .expense-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--color-gold);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .expense-amount {
+            font-weight: 700;
+            color: var(--color-danger);
+            font-size: 15px;
+        }
+
+        .expense-date {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border: 2px solid var(--color-gold);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s ease;
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-gold);
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--color-text-secondary);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--color-gold);
+        }
+
+        /* FORM STYLES */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            color: var(--color-text);
+            transition: var(--transition);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--color-gold);
+            background-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-gold);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .members-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .navbar-menu {
+                gap: 20px;
+            }
+
+            .navbar-menu a {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .action-bar {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .members-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .expenses-table {
+                font-size: 12px;
+            }
+
+            .expenses-table th,
+            .expenses-table td {
+                padding: 12px;
+            }
+
+            .modal-content {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0 15px;
+                height: 60px;
+            }
+
+            .navbar-title {
+                font-size: 18px;
+            }
+
+            .navbar-menu {
+                gap: 15px;
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .member-card {
+                padding: 16px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .modal-header {
+                font-size: 20px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="navbar-logo">⚡</div>
+            <div class="navbar-title">GryffinTwin</div>
+        </div>
+        <ul class="navbar-menu">
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#expenses">Expenses</a></li>
+            <li><a href="#fraud">Fraud Watch</a></li>
+            <li><a href="#goals">Goals</a></li>
+            <li><a href="#family" class="active">My Family</a></li>
+        </ul>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="header">
+            <h1>👨‍👩‍👧‍👦 My Family</h1>
+            <p>Manage family members and track shared expenses | December 6, 2025</p>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-bar">
+            <button class="btn btn-primary" onclick="openAddMemberModal()">➕ Add Family Member</button>
+            <button class="btn btn-secondary" onclick="openAddExpenseModal()">💰 Add Family Expense</button>
+        </div>
+
+        <!-- STATISTICS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Members</div>
+                <div class="stat-value" id="totalMembers">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Family Total Spent</div>
+                <div class="stat-value" id="familyTotalSpent">$0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Per Member</div>
+                <div class="stat-value" id="avgSpent">$0</div>
+            </div>
+        </div>
+
+        <!-- FAMILY MEMBERS -->
+        <div class="members-grid" id="membersGrid"></div>
+
+        <!-- ALL FAMILY EXPENSES -->
+        <div class="card">
+            <div class="card-title">📋 Family Expense History</div>
+            <div class="expenses-section">
+                <table class="expenses-table" id="expensesTable">
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expensesBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--color-text-secondary); padding: 40px;">No expenses recorded yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD MEMBER MODAL -->
+    <div class="modal" id="addMemberModal">
+        <div class="modal-content">
+            <div class="modal-close" onclick="closeModal('addMemberModal')">✕</div>
+            <div class="modal-header">➕ Add Family Member</div>
+            <form onsubmit="addFamilyMember(event)">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" id="memberName" class="form-input" placeholder="e.g., Emma Johnson" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="memberEmail" class="form-input" placeholder="e.g., emma@gryffindor.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select id="memberRole" class="form-select" required>
+                        <option value="">Select Role</option>
+                        <option value="Head of Family">Head of Family</option>
+                        <option value="Family Member">Family Member</option>
+                        <option value="Guardian">Guardian</option>
+                        <option value="Child">Child</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Member</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADD EXPENSE MODAL -->
+    <div class="modal" id="addExpenseModal">
+        <div class="modal-content">
+            <div class="modal-close" onclick="closeModal('addExpenseModal')">✕</div>
+            <div class="modal-header">💰 Add Family Expense</div>
+            <form onsubmit="addFamilyExpense(event)">
+                <div class="form-group">
+                    <label class="form-label">Member</label>
+                    <select id="expenseMember" class="form-select" required>
+                        <option value="">Select Member</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <input type="text" id="expenseDesc" class="form-input" placeholder="What was spent on?" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select id="expenseCategory" class="form-select" required>
+                        <option value="">Select Category</option>
+                        <option value="Groceries">🛒 Groceries</option>
+                        <option value="Food & Dining">🍔 Food & Dining</option>
+                        <option value="Entertainment">🎬 Entertainment</option>
+                        <option value="Shopping">🛍️ Shopping</option>
+                        <option value="Transportation">🚗 Transportation</option>
+                        <option value="Education">📚 Education</option>
+                        <option value="Utilities">💡 Utilities</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Amount</label>
+                    <input type="number" id="expenseAmount" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" id="expenseDate" class="form-input" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Expense</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MEMBER DETAILS MODAL -->
+    <div class="modal" id="memberDetailsModal">
+        <div class="modal-content">
+            <div class="modal-close" onclick="closeModal('memberDetailsModal')">✕</div>
+            <div class="modal-header" id="detailsHeader">Member Details</div>
+            <div id="memberDetailsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let familyData = [
+            {
+                id: 1,
+                name: "Alex Johnson",
+                role: "Head of Family",
+                icon: "👨",
+                email: "alex@gryffindor.com",
+                joinDate: "2025-01-15",
+                expenses: [
+                    {id: 1, description: "Grocery Store", category: "Groceries", amount: 87.32, date: "2025-12-06"},
+                    {id: 2, description: "Gas Station", category: "Transportation", amount: 52.00, date: "2025-12-02"},
+                    {id: 3, description: "Restaurant", category: "Food & Dining", amount: 156.50, date: "2025-12-01"}
+                ]
+            },
+            {
+                id: 2,
+                name: "Emma Johnson",
+                role: "Family Member",
+                icon: "👩",
+                email: "emma@gryffindor.com",
+                joinDate: "2025-02-20",
+                expenses: [
+                    {id: 4, description: "Shopping Mall", category: "Shopping", amount: 234.67, date: "2025-12-05"},
+                    {id: 5, description: "Movie Tickets", category: "Entertainment", amount: 45.00, date: "2025-12-03"},
+                    {id: 6, description: "Coffee Shop", category: "Food & Dining", amount: 12.50, date: "2025-12-06"}
+                ]
+            },
+            {
+                id: 3,
+                name: "Oliver Johnson",
+                role: "Family Member",
+                icon: "👦",
+                email: "oliver@gryffindor.com",
+                joinDate: "2025-03-10",
+                expenses: [
+                    {id: 7, description: "Gaming Console Game", category: "Entertainment", amount: 89.99, date: "2025-12-04"},
+                    {id: 8, description: "School Supplies", category: "Education", amount: 45.23, date: "2025-12-02"}
+                ]
+            }
+        ];
+
+        let nextExpenseId = 9;
+        let nextMemberId = 4;
+
+        const roleIcons = {
+            "Head of Family": "👨",
+            "Family Member": "👩",
+            "Guardian": "👴",
+            "Child": "👧"
+        };
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderMembers();
+            updateStats();
+            populateExpenseMembers();
+            renderAllExpenses();
+            document.getElementById('expenseDate').valueAsDate = new Date();
+        });
+
+        // Render family members
+        function renderMembers() {
+            const membersGrid = document.getElementById('membersGrid');
+            
+            membersGrid.innerHTML = familyData.map(member => {
+                const totalSpent = member.expenses.reduce((sum, e) => sum + e.amount, 0);
+                return `
+                    <div class="member-card">
+                        <div class="member-avatar">${member.icon}</div>
+                        <div class="member-name">${member.name}</div>
+                        <div class="member-role">${member.role}</div>
+                        <div class="member-email">${member.email}</div>
+                        <div class="member-spent-label">Total Spent</div>
+                        <div class="member-spent">$${totalSpent.toFixed(2)}</div>
+                        <div class="member-actions">
+                            <button class="member-btn member-btn-view" onclick="viewMemberDetails(${member.id})">View Details</button>
+                            <button class="member-btn member-btn-remove" onclick="removeMember(${member.id})">Remove</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalMembers = familyData.length;
+            const familyTotal = familyData.reduce((sum, member) => 
+                sum + member.expenses.reduce((msum, e) => msum + e.amount, 0), 0);
+            const avgSpent = totalMembers > 0 ? familyTotal / totalMembers : 0;
+
+            document.getElementById('totalMembers').textContent = totalMembers;
+            document.getElementById('familyTotalSpent').textContent = '$' + familyTotal.toFixed(2);
+            document.getElementById('avgSpent').textContent = '$' + avgSpent.toFixed(2);
+        }
+
+        // Populate expense member dropdown
+        function populateExpenseMembers() {
+            const select = document.getElementById('expenseMember');
+            select.innerHTML = '<option value="">Select Member</option>' + 
+                familyData.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+        }
+
+        // Render all expenses
+        function renderAllExpenses() {
+            const tbody = document.getElementById('expensesBody');
+            const allExpenses = [];
+
+            familyData.forEach(member => {
+                member.expenses.forEach(expense => {
+                    allExpenses.push({...expense, memberId: member.id, memberName: member.name, memberIcon: member.icon});
+                });
+            });
+
+            if (allExpenses.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--color-text-secondary); padding: 40px;">No expenses recorded yet</td></tr>';
+                return;
+            }
+
+            allExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            tbody.innerHTML = allExpenses.map(expense => `
+                <tr>
+                    <td>
+                        <div class="expense-member">
+                            <span class="expense-member-avatar">${familyData.find(m => m.id == expense.memberId).icon}</span>
+                            <span>${expense.memberName}</span>
+                        </div>
+                    </td>
+                    <td>${expense.description}</td>
+                    <td><span class="expense-category">${expense.category}</span></td>
+                    <td><span class="expense-amount">$${expense.amount.toFixed(2)}</span></td>
+                    <td><span class="expense-date">${new Date(expense.date).toLocaleDateString()}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // View member details
+        function viewMemberDetails(memberId) {
+            const member = familyData.find(m => m.id === memberId);
+            if (!member) return;
+
+            const totalSpent = member.expenses.reduce((sum, e) => sum + e.amount, 0);
+            const expensesHtml = member.expenses.map(expense => `
+                <tr>
+                    <td>${expense.description}</td>
+                    <td><span class="expense-category">${expense.category}</span></td>
+                    <td><span class="expense-amount">$${expense.amount.toFixed(2)}</span></td>
+                    <td><span class="expense-date">${new Date(expense.date).toLocaleDateString()}</span></td>
+                </tr>
+            `).join('');
+
+            document.getElementById('detailsHeader').textContent = `${member.icon} ${member.name} - Details`;
+            document.getElementById('memberDetailsContent').innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <p style="color: var(--color-text-secondary); margin-bottom: 8px;"><strong>Role:</strong> ${member.role}</p>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 8px;"><strong>Email:</strong> ${member.email}</p>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 8px;"><strong>Joined:</strong> ${new Date(member.joinDate).toLocaleDateString()}</p>
+                    <p style="color: var(--color-gold); font-size: 18px; font-weight: 700; margin-top: 12px;"><strong>Total Spent:</strong> $${totalSpent.toFixed(2)}</p>
+                </div>
+                <h3 style="color: var(--color-gold); margin-bottom: 16px; margin-top: 24px;">Expense History</h3>
+                <table class="expenses-table" style="margin-top: 0;">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${expensesHtml || '<tr><td colspan="4" style="text-align: center; color: var(--color-text-secondary);">No expenses</td></tr>'}
+                    </tbody>
+                </table>
+            `;
+
+            openModal('memberDetailsModal');
+        }
+
+        // Add family member
+        function addFamilyMember(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('memberName').value;
+            const email = document.getElementById('memberEmail').value;
+            const role = document.getElementById('memberRole').value;
+
+            if (!name || !email || !role) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            const newMember = {
+                id: nextMemberId++,
+                name,
+                email,
+                role,
+                icon: roleIcons[role] || '👤',
+                joinDate: new Date().toISOString().split('T')[0],
+                expenses: []
+            };
+
+            familyData.push(newMember);
+            renderMembers();
+            updateStats();
+            populateExpenseMembers();
+            closeModal('addMemberModal');
+            document.getElementById('addMemberModal').querySelector('form').reset();
+            alert('✨ Family member added successfully!');
+        }
+
+        // Add family expense
+        function addFamilyExpense(event) {
+            event.preventDefault();
+
+            const memberId = parseInt(document.getElementById('expenseMember').value);
+            const description = document.getElementById('expenseDesc').value;
+            const category = document.getElementById('expenseCategory').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            const date = document.getElementById('expenseDate').value;
+
+            if (!memberId || !description || !category || !amount || !date) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            const member = familyData.find(m => m.id === memberId);
+            if (member) {
+                member.expenses.push({
+                    id: nextExpenseId++,
+                    description,
+                    category,
+                    amount,
+                    date
+                });
+
+                renderMembers();
+                updateStats();
+                renderAllExpenses();
+                closeModal('addExpenseModal');
+                document.getElementById('addExpenseModal').querySelector('form').reset();
+                document.getElementById('expenseDate').valueAsDate = new Date();
+                alert('✨ Expense added successfully!');
+            }
+        }
+
+        // Remove member
+        function removeMember(memberId) {
+            if (confirm('Are you sure you want to remove this family member?')) {
+                familyData = familyData.filter(m => m.id !== memberId);
+                renderMembers();
+                updateStats();
+                populateExpenseMembers();
+                renderAllExpenses();
+            }
+        }
+
+        // Modal functions
+        function openAddMemberModal() {
+            openModal('addMemberModal');
+        }
+
+        function openAddExpenseModal() {
+            openModal('addExpenseModal');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Handle logout
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                alert('Logged out successfully!');
+            }
+        }
+
+        // Menu navigation
+        document.querySelectorAll('.navbar-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.navbar-menu a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Close modal on background click
+        ['addMemberModal', 'addExpenseModal', 'memberDetailsModal'].forEach(modalId => {
+            document.getElementById(modalId).addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal(modalId);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

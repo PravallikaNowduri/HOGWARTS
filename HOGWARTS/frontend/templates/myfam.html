@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - MyFam</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-navy-lighter: #2a3f5f;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-success: #22C55E;
+            --color-danger: #EF4444;
+            --color-warning: #F59E0B;
+            --color-info: #3B82F6;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(212, 175, 55, 0.2);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            width: 50px;
+            height: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: pointer;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            color: var(--color-gold);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--color-danger) 0%, #DC2626 100%);
+            color: var(--color-white);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-right: 2px solid var(--color-gold);
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 12px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--color-gold);
+            border-left-color: var(--color-gold);
+        }
+
+        .sidebar-menu a.active {
+            background-color: rgba(212, 175, 55, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            border-left-color: var(--color-gold);
+        }
+
+        /* CONTENT AREA */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title h2 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .page-title p {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        /* ADD FAMILY FORM */
+        .add-family-form {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .form-title {
+            font-size: 18px;
+            color: var(--color-gold);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            padding: 12px 16px;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            color: var(--color-text);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--color-gold);
+        }
+
+        .btn-add-member {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--color-gold) 0%, #E5C158 100%);
+            color: var(--color-navy);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-add-member:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4);
+        }
+
+        /* FAMILY MEMBERS GRID */
+        .family-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .member-card {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .member-card:hover {
+            border-color: var(--color-gold);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .member-card.active {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
+            border-color: var(--color-gold);
+        }
+
+        .member-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .member-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-gold) 0%, #E5C158 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-navy);
+        }
+
+        .member-name {
+            font-size: 16px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .member-relation {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        .member-stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .btn-remove {
+            width: 100%;
+            padding: 10px;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .btn-remove:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        /* SUMMARY SECTION */
+        .summary-section {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .summary-title {
+            font-size: 18px;
+            color: var(--color-gold);
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .summary-card {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 28px;
+            color: var(--color-gold);
+            font-weight: 700;
+        }
+
+        /* CHART SECTION */
+        .chart-section {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .chart-title {
+            font-size: 18px;
+            color: var(--color-gold);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-navy-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-gold);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E5C158;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .content {
+                padding: 24px;
+            }
+
+            .family-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid var(--color-gold);
+                display: flex;
+                overflow-x: auto;
+                padding: 12px;
+                max-height: 60px;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                gap: 8px;
+                white-space: nowrap;
+            }
+
+            .sidebar-menu li {
+                margin-bottom: 0;
+            }
+
+            .sidebar-menu a {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .family-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px;
+            }
+
+            .header-title h1 {
+                font-size: 20px;
+            }
+
+            .page-title h2 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .family-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <a href="{{ url_for('dashboard') }}" style="display: block; cursor: pointer; text-decoration: none;">
+                <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/a279e29e-206b-441a-acc3-a3dc038c81f9"
+                    alt="Logo" class="header-logo">
+            </a>
+            <div class="header-title">
+                <h1>GryffinTwin</h1>
+                <p>Family Expense Management</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-name">{{ user_name }}</div>
+                <div class="user-email">{{ user_email }}</div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-btn" style="text-decoration: none; display: inline-block;">⚡
+                Logout</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('dashboard') }}">📊 Dashboard</a></li>
+                <li><a href="{{ url_for('expenses') }}">💳 Expenses</a></li>
+                <li><a href="{{ url_for('security') }}">🛡️ Security</a></li>
+                <li><a href="{{ url_for('goals') }}">🎯 Goals</a></li>
+                <li><a href="{{ url_for('analytics') }}">📈 Analytics</a></li>
+                <li><a href="{{ url_for('portfolio') }}">💼 Portfolio</a></li>
+                <li><a href="{{ url_for('myfam') }}" class="active">👨‍👩‍👧‍👦 MyFam</a></li>
+            </ul>
+        </aside>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Family Expense Tracker</h2>
+                    <p>Manage and track individual family member expenses</p>
+                </div>
+            </div>
+
+            <!-- ADD FAMILY MEMBER FORM -->
+            <div class="add-family-form">
+                <h3 class="form-title">➕ Add Family Member</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Member Name</label>
+                        <input type="text" id="memberName" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label>Relationship</label>
+                        <input type="text" id="memberRelation" placeholder="e.g., Father, Mother, Sister">
+                    </div>
+                    <div class="form-group">
+                        <label>Monthly Budget</label>
+                        <input type="number" id="memberBudget" placeholder="Enter budget amount" min="0">
+                    </div>
+                </div>
+                <button class="btn-add-member" onclick="addFamilyMember()">Add Member</button>
+            </div>
+
+            <!-- FAMILY MEMBERS -->
+            <div class="family-grid" id="familyGrid">
+                <!-- Family member cards will be added here -->
+            </div>
+
+            <!-- SUMMARY SECTION -->
+            <div class="summary-section">
+                <h3 class="summary-title">📊 Family Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-label">Total Members</div>
+                        <div class="summary-value" id="totalMembers">0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Total Budget</div>
+                        <div class="summary-value" id="totalBudget">$0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Total Spent</div>
+                        <div class="summary-value" id="totalSpent">$0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Remaining</div>
+                        <div class="summary-value" id="totalRemaining">$0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHART SECTION -->
+            <div class="chart-section">
+                <h3 class="chart-title">📈 Family Expense Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let families = [];
+        let selectedMember = null;
+        let chartInstance = null;
+
+        window.addEventListener('load', function () {
+            // Server-side auth handled by Flask
+            /*
+            const sessionData = sessionStorage.getItem('gryffinTwinSession') || localStorage.getItem('gryffinTwinSession');
+            if (!sessionData) { window.location.href = 'login.html'; return; }
+            const user = JSON.parse(sessionData);
+            document.getElementById('userNameDisplay').textContent = user.name;
+            document.getElementById('userEmailDisplay').textContent = user.email;
+            */
+
+            // Load sample data
+            loadSampleData();
+            renderFamilyCards();
+            updateSummary();
+            initializeChart();
+        });
+
+        function loadSampleData() {
+            families = [
+                { id: 1, name: 'Rajesh Kumar', relation: 'Father', budget: 8000, spent: 5200, emoji: '👨' },
+                { id: 2, name: 'Priya Kumar', relation: 'Mother', budget: 7000, spent: 4800, emoji: '👩' },
+                { id: 3, name: 'Anjali', relation: 'Sister', budget: 5000, spent: 3400, emoji: '👧' },
+                { id: 4, name: 'Arjun', relation: 'Brother', budget: 6000, spent: 4200, emoji: '👦' },
+                { id: 5, name: 'Neha', relation: 'Cousin', budget: 4500, spent: 2900, emoji: '👱‍♀️' },
+                { id: 6, name: 'Vikram', relation: 'Uncle', budget: 7500, spent: 5100, emoji: '🧔' }
+            ];
+        }
+
+        function addFamilyMember() {
+            const name = document.getElementById('memberName').value;
+            const relation = document.getElementById('memberRelation').value;
+            const budget = parseFloat(document.getElementById('memberBudget').value);
+
+            if (!name || !relation || !budget || budget <= 0) {
+                alert('Please fill all fields with valid data');
+                return;
+            }
+
+            const newMember = {
+                id: families.length + 1,
+                name: name,
+                relation: relation,
+                budget: budget,
+                spent: 0,
+                emoji: getRandomEmoji()
+            };
+
+            families.push(newMember);
+
+            // Clear form
+            document.getElementById('memberName').value = '';
+            document.getElementById('memberRelation').value = '';
+            document.getElementById('memberBudget').value = '';
+
+            renderFamilyCards();
+            updateSummary();
+            updateChart();
+        }
+
+        function removeMember(id) {
+            if (confirm('Are you sure you want to remove this member?')) {
+                families = families.filter(f => f.id !== id);
+                renderFamilyCards();
+                updateSummary();
+                updateChart();
+            }
+        }
+
+        function getRandomEmoji() {
+            const emojis = ['👨', '👩', '👧', '👦', '👶', '🧔', '👴', '👵'];
+            return emojis[Math.floor(Math.random() * emojis.length)];
+        }
+
+        function renderFamilyCards() {
+            const grid = document.getElementById('familyGrid');
+            grid.innerHTML = '';
+
+            families.forEach(member => {
+                const remaining = member.budget - member.spent;
+                const percentUsed = ((member.spent / member.budget) * 100).toFixed(1);
+
+                const card = document.createElement('div');
+                card.className = 'member-card' + (selectedMember === member.id ? ' active' : '');
+                card.onclick = () => selectMember(member.id);
+
+                card.innerHTML = `
+                    <div class="member-header">
+                        <div>
+                            <div class="member-avatar">${member.emoji}</div>
+                        </div>
+                        <button class="btn-remove" onclick="event.stopPropagation(); removeMember(${member.id})">Remove</button>
+                    </div>
+                    <div class="member-name">${member.name}</div>
+                    <div class="member-relation">${member.relation}</div>
+                    <div class="member-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Budget</div>
+                            <div class="stat-value">$${member.budget.toLocaleString()}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Spent</div>
+                            <div class="stat-value" style="color: #EF4444;">$${member.spent.toLocaleString()}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Remaining</div>
+                            <div class="stat-value" style="color: #22C55E;">$${remaining.toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <div style="padding: 12px; background: rgba(212, 175, 55, 0.1); border-radius: 6px; text-align: center;">
+                        <span style="font-size: 12px; color: var(--color-text-secondary);">${percentUsed}% Budget Used</span>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function selectMember(id) {
+            selectedMember = selectedMember === id ? null : id;
+            renderFamilyCards();
+        }
+
+        function updateSummary() {
+            const totalMembers = families.length;
+            const totalBudget = families.reduce((sum, f) => sum + f.budget, 0);
+            const totalSpent = families.reduce((sum, f) => sum + f.spent, 0);
+            const totalRemaining = totalBudget - totalSpent;
+
+            document.getElementById('totalMembers').textContent = totalMembers;
+            document.getElementById('totalBudget').textContent = '$' + totalBudget.toLocaleString();
+            document.getElementById('totalSpent').textContent = '$' + totalSpent.toLocaleString();
+            document.getElementById('totalRemaining').textContent = '$' + totalRemaining.toLocaleString();
+        }
+
+        function initializeChart() {
+            const ctx = document.getElementById('expenseChart').getContext('2d');
+
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: families.map(f => f.name),
+                    datasets: [{
+                        data: families.map(f => f.spent),
+                        backgroundColor: [
+                            '#D4AF37',
+                            '#22C55E',
+                            '#EF4444',
+                            '#F59E0B',
+                            '#3B82F6',
+                            '#8B5CF6',
+                            '#EC4899',
+                            '#06B6D4'
+                        ],
+                        borderColor: 'rgba(10, 20, 40, 0.9)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#E8E8E8',
+                                font: { size: 12, weight: '600' },
+                                padding: 20
+                            },
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            if (chartInstance) {
+                chartInstance.data.labels = families.map(f => f.name);
+                chartInstance.data.datasets[0].data = families.map(f => f.spent);
+                chartInstance.update();
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('gryffinTwinSession');
+                localStorage.removeItem('gryffinTwinSession');
+                window.location.href = 'login.html';
+            }
+        }
+
+        function navigateTo(page) {
+            const pageMap = {
+                'dashboard': 'dashboard.html',
+                'expenses': 'expenses.html',
+                'security': 'security.html',
+                'goals': 'goals.html',
+                'analytics': 'analytics.html',
+                'portfolio': 'portfolio.html',
+                'myfam': 'myfam.html'
+            };
+
+            if (pageMap[page]) {
+                window.location.href = pageMap[page];
+            }
+        }
+    </script>
+</body>
+
+</html>

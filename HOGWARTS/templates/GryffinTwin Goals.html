@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - Financial Goals</title>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-danger: #EF4444;
+            --color-info: #3B82F6;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .navbar-brand:hover {
+            transform: translateY(-2px);
+        }
+
+        .navbar-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--color-gold);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--color-navy);
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .navbar-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-gold);
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            list-style: none;
+        }
+
+        .navbar-menu a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .navbar-menu a:hover,
+        .navbar-menu a.active {
+            color: var(--color-gold);
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .navbar-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 16px;
+            right: 16px;
+            height: 2px;
+            background: var(--color-gold);
+            border-radius: 1px;
+        }
+
+        .logout-btn {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid var(--color-danger);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background-color: var(--color-danger);
+            color: var(--color-white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* MAIN CONTENT */
+        .container {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        /* MAIN GRID */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* CARD STYLES */
+        .card {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, rgba(26, 37, 64, 0.5) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--color-gold);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .card-title {
+            font-size: 18px;
+            color: var(--color-gold);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* FORM STYLES */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            color: var(--color-text);
+            transition: var(--transition);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: var(--color-text-secondary);
+            opacity: 0.7;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-gold);
+            background-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, var(--color-gold) 0%, #E5C158 100%);
+            color: var(--color-navy);
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger);
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .btn-danger:hover {
+            background: var(--color-danger);
+            color: var(--color-white);
+        }
+
+        /* GOALS LIST */
+        .goals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* GOAL ITEM */
+        .goal-item {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, rgba(26, 37, 64, 0.5) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            transition: var(--transition);
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .goal-item:hover {
+            border-color: var(--color-gold);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
+            transform: translateX(4px);
+        }
+
+        .goal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .goal-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .goal-icon {
+            font-size: 32px;
+        }
+
+        .goal-info {
+            flex: 1;
+        }
+
+        .goal-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 4px;
+        }
+
+        .goal-category {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .goal-priority {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .goal-priority.high {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+        }
+
+        .goal-priority.medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+        }
+
+        .goal-priority.low {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--color-info);
+        }
+
+        .goal-description {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .goal-progress-section {
+            margin-bottom: 16px;
+        }
+
+        .goal-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .goal-progress-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .goal-progress-percent {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-gold);
+        }
+
+        .goal-progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: rgba(212, 175, 55, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .goal-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-gold), #E5C158);
+            border-radius: 5px;
+            transition: width 0.6s ease-out;
+        }
+
+        .goal-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            padding: 12px 0;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            margin-bottom: 16px;
+        }
+
+        .goal-meta-item {
+            text-align: center;
+        }
+
+        .goal-meta-label {
+            font-size: 11px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .goal-meta-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-gold);
+        }
+
+        .goal-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-add-funds {
+            flex: 1;
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--color-gold);
+            border: 1px solid var(--color-gold);
+            padding: 10px 16px;
+            font-size: 13px;
+        }
+
+        .btn-add-funds:hover {
+            background: rgba(212, 175, 55, 0.3);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border: 2px solid var(--color-gold);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-gold);
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--color-text-secondary);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--color-gold);
+        }
+
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-gold);
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .goal-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .navbar-menu {
+                gap: 20px;
+            }
+
+            .navbar-menu a {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .goal-actions {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0 15px;
+                height: 60px;
+            }
+
+            .navbar-title {
+                font-size: 18px;
+            }
+
+            .navbar-menu {
+                gap: 15px;
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .card,
+            .goal-item {
+                padding: 16px;
+            }
+
+            .goal-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .goal-priority {
+                margin-top: 8px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .modal-header {
+                font-size: 20px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="navbar-logo">⚡</div>
+            <div class="navbar-title">GryffinTwin</div>
+        </div>
+        <ul class="navbar-menu">
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#expenses">Expenses</a></li>
+            <li><a href="#fraud">Fraud Watch</a></li>
+            <li><a href="#goals" class="active">Goals</a></li>
+        </ul>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Financial Goals</h1>
+            <p>Set and track your financial objectives | December 6, 2025</p>
+        </div>
+
+        <!-- STATISTICS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Goals</div>
+                <div class="stat-value" id="totalGoals">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Target</div>
+                <div class="stat-value" id="totalTarget">$0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Saved</div>
+                <div class="stat-value" id="totalSaved">$0</div>
+            </div>
+        </div>
+
+        <!-- MAIN GRID -->
+        <div class="main-grid">
+            <!-- CREATE GOAL FORM -->
+            <div class="card">
+                <div class="card-title">✨ Create New Goal</div>
+                <form id="goalForm" onsubmit="createGoal(event)">
+                    <div class="form-group">
+                        <label class="form-label">Goal Name</label>
+                        <input 
+                            type="text" 
+                            id="goalName" 
+                            class="form-input" 
+                            placeholder="e.g., Emergency Fund" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea 
+                            id="goalDescription" 
+                            class="form-textarea" 
+                            placeholder="What's this goal for?" 
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Target Amount</label>
+                            <input 
+                                type="number" 
+                                id="goalTarget" 
+                                class="form-input" 
+                                placeholder="0.00" 
+                                step="0.01" 
+                                min="0" 
+                                required
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select id="goalCategory" class="form-select" required>
+                                <option value="">Select Category</option>
+                                <option value="Safety Net">🏦 Safety Net</option>
+                                <option value="Travel">✈️ Travel</option>
+                                <option value="Technology">💻 Technology</option>
+                                <option value="Home">🏠 Home</option>
+                                <option value="Education">📚 Education</option>
+                                <option value="Health">🏥 Health</option>
+                                <option value="Investment">💰 Investment</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Deadline</label>
+                            <input 
+                                type="date" 
+                                id="goalDeadline" 
+                                class="form-input" 
+                                required
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Priority</label>
+                            <select id="goalPriority" class="form-select" required>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">⚡ Create Goal</button>
+                </form>
+            </div>
+
+            <!-- GOALS LIST -->
+            <div class="card">
+                <div class="card-title">📋 Your Goals</div>
+                <div class="goals-list" id="goalsList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎯</div>
+                        <h3>No Goals Yet</h3>
+                        <p>Create your first financial goal to get started!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALL GOALS SECTION -->
+        <div class="card" style="margin-top: 24px;">
+            <div class="card-title">📊 Detailed Goals</div>
+            <div id="detailedGoals"></div>
+        </div>
+    </div>
+
+    <!-- ADD FUNDS MODAL -->
+    <div class="modal" id="addFundsModal">
+        <div class="modal-content" style="position: relative;">
+            <div class="modal-close" onclick="closeModal()">✕</div>
+            <div class="modal-header">Add Funds</div>
+            <div style="margin-bottom: 20px;">
+                <p style="color: var(--color-text-secondary); font-size: 14px;" id="modalGoalName"></p>
+            </div>
+            <form onsubmit="addFunds(event)">
+                <div class="form-group">
+                    <label class="form-label">Amount to Add</label>
+                    <input 
+                        type="number" 
+                        id="addFundsAmount" 
+                        class="form-input" 
+                        placeholder="0.00" 
+                        step="0.01" 
+                        min="0.01" 
+                        required
+                    >
+                </div>
+                <button type="submit" class="btn btn-primary">Add Funds</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let goalsData = [
+            {
+                id: 1,
+                name: "Emergency Fund",
+                description: "Build a 6-month emergency fund",
+                icon: "🏦",
+                target: 10000,
+                current: 8500,
+                deadline: "2025-12-31",
+                category: "Safety Net",
+                priority: "high"
+            },
+            {
+                id: 2,
+                name: "Vacation Fund",
+                description: "Summer trip to Europe",
+                icon: "✈️",
+                target: 3000,
+                current: 1250,
+                deadline: "2026-06-30",
+                category: "Travel",
+                priority: "medium"
+            },
+            {
+                id: 3,
+                name: "New Laptop",
+                description: "Upgrade to latest MacBook Pro",
+                icon: "💻",
+                target: 1500,
+                current: 890,
+                deadline: "2026-03-31",
+                category: "Technology",
+                priority: "medium"
+            }
+        ];
+
+        let currentGoalId = null;
+
+        const categoryIcons = {
+            "Safety Net": "🏦",
+            "Travel": "✈️",
+            "Technology": "💻",
+            "Home": "🏠",
+            "Education": "📚",
+            "Health": "🏥",
+            "Investment": "💰"
+        };
+
+        // Create goal
+        function createGoal(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('goalName').value;
+            const description = document.getElementById('goalDescription').value;
+            const target = parseFloat(document.getElementById('goalTarget').value);
+            const category = document.getElementById('goalCategory').value;
+            const deadline = document.getElementById('goalDeadline').value;
+            const priority = document.getElementById('goalPriority').value;
+
+            if (!name || !description || !target || !category || !deadline) {
+                alert('⚠️ Please fill in all fields');
+                return;
+            }
+
+            const goal = {
+                id: Date.now(),
+                name,
+                description,
+                icon: categoryIcons[category] || '🎯',
+                target,
+                current: 0,
+                deadline,
+                category,
+                priority
+            };
+
+            goalsData.push(goal);
+            renderGoals();
+            updateStats();
+            document.getElementById('goalForm').reset();
+            alert('✨ Goal created successfully!');
+        }
+
+        // Render goals
+        function renderGoals() {
+            const goalsList = document.getElementById('goalsList');
+            const detailedGoals = document.getElementById('detailedGoals');
+
+            if (goalsData.length === 0) {
+                goalsList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎯</div><h3>No Goals Yet</h3><p>Create your first financial goal to get started!</p></div>';
+                detailedGoals.innerHTML = '';
+                return;
+            }
+
+            // Goals list
+            goalsList.innerHTML = goalsData.map(goal => {
+                const progress = (goal.current / goal.target) * 100;
+                const daysLeft = Math.ceil((new Date(goal.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+                
+                return `
+                    <div class="goal-item">
+                        <div class="goal-header">
+                            <div class="goal-title-group">
+                                <div class="goal-icon">${goal.icon}</div>
+                                <div class="goal-info">
+                                    <div class="goal-name">${goal.name}</div>
+                                    <div class="goal-category">${goal.category}</div>
+                                </div>
+                            </div>
+                            <div class="goal-priority ${goal.priority}">${goal.priority.toUpperCase()}</div>
+                        </div>
+                        <div class="goal-description">${goal.description}</div>
+                        <div class="goal-meta">
+                            <div class="goal-meta-item">
+                                <div class="goal-meta-label">Saved</div>
+                                <div class="goal-meta-value">$${goal.current.toFixed(2)}</div>
+                            </div>
+                            <div class="goal-meta-item">
+                                <div class="goal-meta-label">Target</div>
+                                <div class="goal-meta-value">$${goal.target.toFixed(2)}</div>
+                            </div>
+                            <div class="goal-meta-item">
+                                <div class="goal-meta-label">Days Left</div>
+                                <div class="goal-meta-value">${daysLeft} days</div>
+                            </div>
+                        </div>
+                        <div class="goal-progress-section">
+                            <div class="goal-progress-header">
+                                <span class="goal-progress-label">Progress</span>
+                                <span class="goal-progress-percent">${progress.toFixed(1)}%</span>
+                            </div>
+                            <div class="goal-progress-bar">
+                                <div class="goal-progress-fill" style="width: ${progress}%;"></div>
+                            </div>
+                        </div>
+                        <div class="goal-actions">
+                            <button class="btn btn-add-funds" onclick="openAddFundsModal(${goal.id}, '${goal.name}')">+ Add Funds</button>
+                            <button class="btn btn-danger" onclick="deleteGoal(${goal.id})">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Detailed goals
+            detailedGoals.innerHTML = goalsData.map(goal => {
+                const progress = (goal.current / goal.target) * 100;
+                return `
+                    <div style="margin-bottom: 20px; padding: 16px; background-color: rgba(255, 255, 255, 0.02); border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <span style="font-size: 16px; font-weight: 600; color: var(--color-text);">${goal.icon} ${goal.name}</span>
+                            <span style="font-size: 14px; font-weight: 700; color: var(--color-gold);">$${goal.current.toFixed(2)} / $${goal.target.toFixed(2)}</span>
+                        </div>
+                        <div style="width: 100%; height: 10px; background-color: rgba(212, 175, 55, 0.1); border-radius: 5px; overflow: hidden; margin-bottom: 12px;">
+                            <div style="height: 100%; background: linear-gradient(90deg, var(--color-gold), #E5C158); border-radius: 5px; width: ${progress}%;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalGoals = goalsData.length;
+            const totalTarget = goalsData.reduce((sum, g) => sum + g.target, 0);
+            const totalSaved = goalsData.reduce((sum, g) => sum + g.current, 0);
+
+            document.getElementById('totalGoals').textContent = totalGoals;
+            document.getElementById('totalTarget').textContent = '$' + totalTarget.toFixed(2);
+            document.getElementById('totalSaved').textContent = '$' + totalSaved.toFixed(2);
+        }
+
+        // Open add funds modal
+        function openAddFundsModal(goalId, goalName) {
+            currentGoalId = goalId;
+            document.getElementById('modalGoalName').textContent = goalName;
+            document.getElementById('addFundsAmount').value = '';
+            document.getElementById('addFundsModal').classList.add('show');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('addFundsModal').classList.remove('show');
+            currentGoalId = null;
+        }
+
+        // Add funds
+        function addFunds(event) {
+            event.preventDefault();
+            const amount = parseFloat(document.getElementById('addFundsAmount').value);
+
+            const goal = goalsData.find(g => g.id === currentGoalId);
+            if (goal) {
+                goal.current = Math.min(goal.current + amount, goal.target);
+                renderGoals();
+                updateStats();
+                closeModal();
+                alert('✨ Funds added successfully!');
+            }
+        }
+
+        // Delete goal
+        function deleteGoal(id) {
+            if (confirm('Are you sure you want to delete this goal?')) {
+                goalsData = goalsData.filter(g => g.id !== id);
+                renderGoals();
+                updateStats();
+            }
+        }
+
+        // Handle logout
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                console.log('User logged out');
+                alert('Logged out successfully!');
+            }
+        }
+
+        // Menu navigation
+        document.querySelectorAll('.navbar-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.navbar-menu a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Close modal on background click
+        document.getElementById('addFundsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderGoals();
+            updateStats();
+        });
+    </script>
+</body>
+</html>

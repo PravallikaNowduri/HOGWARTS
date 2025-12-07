@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - Financial Dashboard</title>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-danger: #EF4444;
+            --color-info: #3B82F6;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .navbar-brand:hover {
+            transform: translateY(-2px);
+        }
+
+        .navbar-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--color-gold);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--color-navy);
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .navbar-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-gold);
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            list-style: none;
+        }
+
+        .navbar-menu a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .navbar-menu a:hover,
+        .navbar-menu a.active {
+            color: var(--color-gold);
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .navbar-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 16px;
+            right: 16px;
+            height: 2px;
+            background: var(--color-gold);
+            border-radius: 1px;
+        }
+
+        .logout-btn {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid var(--color-danger);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background-color: var(--color-danger);
+            color: var(--color-white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* MAIN CONTENT */
+        .container {
+            flex: 1;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        /* GRID LAYOUT */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, rgba(26, 37, 64, 0.5) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--color-gold);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .card-title {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-gold);
+            margin-bottom: 12px;
+        }
+
+        .card-subtitle {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: rgba(212, 175, 55, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-gold), #E5C158);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* TWO COLUMN LAYOUT FOR LOWER SECTION */
+        .dashboard-lower {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .transactions-card {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, rgba(26, 37, 64, 0.5) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .transactions-card h3 {
+            font-size: 18px;
+            color: var(--color-gold);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            transition: var(--transition);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-item:hover {
+            background-color: rgba(212, 175, 55, 0.05);
+            padding: 12px 8px;
+            border-radius: 6px;
+        }
+
+        .transaction-details {
+            flex: 1;
+        }
+
+        .transaction-description {
+            font-size: 14px;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .transaction-category {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        .transaction-amount {
+            font-size: 14px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .transaction-amount.expense {
+            color: var(--color-danger);
+        }
+
+        .transaction-amount.income {
+            color: var(--color-success);
+        }
+
+        /* EXPENSE BREAKDOWN */
+        .expense-breakdown {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, rgba(26, 37, 64, 0.5) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .expense-breakdown h3 {
+            font-size: 18px;
+            color: var(--color-gold);
+            margin-bottom: 20px;
+        }
+
+        .expense-item {
+            margin-bottom: 20px;
+        }
+
+        .expense-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .expense-category {
+            font-size: 13px;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .expense-amount {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-gold);
+        }
+
+        .expense-bar {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(212, 175, 55, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .expense-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #D4AF37, #E5C158);
+            border-radius: 4px;
+        }
+
+        /* GOALS SECTION */
+        .goals-section {
+            margin-top: 40px;
+        }
+
+        .goals-section h2 {
+            font-size: 22px;
+            color: var(--color-gold);
+            margin-bottom: 24px;
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .goal-card {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, rgba(26, 37, 64, 0.5) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .goal-card:hover {
+            border-color: var(--color-gold);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
+        }
+
+        .goal-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 16px;
+        }
+
+        .goal-progress {
+            margin-bottom: 12px;
+        }
+
+        .goal-progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .goal-progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(212, 175, 55, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .goal-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-success), #34D399);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .goal-deadline {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .navbar-menu {
+                gap: 20px;
+            }
+
+            .navbar-menu a {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .dashboard-lower {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="navbar-logo">⚡</div>
+            <div class="navbar-title">GryffinTwin</div>
+        </div>
+        <ul class="navbar-menu">
+            <li><a href="#dashboard" class="active">Dashboard</a></li>
+            <li><a href="#expenses">Expenses</a></li>
+            <li><a href="#fraud">Fraud Watch</a></li>
+            <li><a href="#goals">Goals</a></li>
+        </ul>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="header">
+            <h1>Financial Dashboard</h1>
+            <p>Real-time overview of your financial health | December 6, 2025</p>
+        </div>
+
+        <!-- KEY METRICS CARDS -->
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-title">Account Balance</div>
+                <div class="card-value">$12,547.89</div>
+                <div class="card-subtitle">✓ Connected to 3 accounts</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Monthly Budget</div>
+                <div class="card-value">$5,000</div>
+                <div class="card-subtitle">Remaining: $2,354.23</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 53%;"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">This Month Spent</div>
+                <div class="card-value">$2,645.77</div>
+                <div class="card-subtitle">↑ 8% from last month</div>
+            </div>
+        </div>
+
+        <!-- TRANSACTIONS & EXPENSE BREAKDOWN -->
+        <div class="dashboard-lower">
+            <div class="transactions-card">
+                <h3>💳 Recent Transactions</h3>
+                <div class="transaction-item">
+                    <div class="transaction-details">
+                        <div class="transaction-description">Starbucks Coffee</div>
+                        <div class="transaction-category">Food & Dining</div>
+                    </div>
+                    <div class="transaction-amount expense">-$5.45</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-details">
+                        <div class="transaction-description">Salary Deposit</div>
+                        <div class="transaction-category">Income</div>
+                    </div>
+                    <div class="transaction-amount income">+$4,500.00</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-details">
+                        <div class="transaction-description">Netflix Subscription</div>
+                        <div class="transaction-category">Entertainment</div>
+                    </div>
+                    <div class="transaction-amount expense">-$15.99</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-details">
+                        <div class="transaction-description">Grocery Store</div>
+                        <div class="transaction-category">Groceries</div>
+                    </div>
+                    <div class="transaction-amount expense">-$87.32</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-details">
+                        <div class="transaction-description">Gas Station</div>
+                        <div class="transaction-category">Transportation</div>
+                    </div>
+                    <div class="transaction-amount expense">-$52.00</div>
+                </div>
+            </div>
+
+            <div class="expense-breakdown">
+                <h3>📊 Spending by Category</h3>
+                <div class="expense-item">
+                    <div class="expense-header">
+                        <span class="expense-category">Food & Dining</span>
+                        <span class="expense-amount">$342.56</span>
+                    </div>
+                    <div class="expense-bar">
+                        <div class="expense-bar-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="expense-item">
+                    <div class="expense-header">
+                        <span class="expense-category">Transportation</span>
+                        <span class="expense-amount">$156.00</span>
+                    </div>
+                    <div class="expense-bar">
+                        <div class="expense-bar-fill" style="width: 45%;"></div>
+                    </div>
+                </div>
+                <div class="expense-item">
+                    <div class="expense-header">
+                        <span class="expense-category">Shopping</span>
+                        <span class="expense-amount">$234.67</span>
+                    </div>
+                    <div class="expense-bar">
+                        <div class="expense-bar-fill" style="width: 68%;"></div>
+                    </div>
+                </div>
+                <div class="expense-item">
+                    <div class="expense-header">
+                        <span class="expense-category">Entertainment</span>
+                        <span class="expense-amount">$89.99</span>
+                    </div>
+                    <div class="expense-bar">
+                        <div class="expense-bar-fill" style="width: 26%;"></div>
+                    </div>
+                </div>
+                <div class="expense-item">
+                    <div class="expense-header">
+                        <span class="expense-category">Utilities</span>
+                        <span class="expense-amount">$145.32</span>
+                    </div>
+                    <div class="expense-bar">
+                        <div class="expense-bar-fill" style="width: 42%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FINANCIAL GOALS -->
+        <div class="goals-section">
+            <h2>🎯 Financial Goals</h2>
+            <div class="goals-grid">
+                <div class="goal-card">
+                    <div class="goal-name">Emergency Fund</div>
+                    <div class="goal-progress">
+                        <div class="goal-progress-text">
+                            <span>$8,500 / $10,000</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="goal-progress-bar">
+                            <div class="goal-progress-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="goal-deadline">📅 Target: Dec 31, 2025</div>
+                </div>
+
+                <div class="goal-card">
+                    <div class="goal-name">Vacation Fund</div>
+                    <div class="goal-progress">
+                        <div class="goal-progress-text">
+                            <span>$1,250 / $3,000</span>
+                            <span>42%</span>
+                        </div>
+                        <div class="goal-progress-bar">
+                            <div class="goal-progress-fill" style="width: 42%;"></div>
+                        </div>
+                    </div>
+                    <div class="goal-deadline">📅 Target: Jun 30, 2026</div>
+                </div>
+
+                <div class="goal-card">
+                    <div class="goal-name">New Laptop</div>
+                    <div class="goal-progress">
+                        <div class="goal-progress-text">
+                            <span>$890 / $1,500</span>
+                            <span>59%</span>
+                        </div>
+                        <div class="goal-progress-bar">
+                            <div class="goal-progress-fill" style="width: 59%;"></div>
+                        </div>
+                    </div>
+                    <div class="goal-deadline">📅 Target: Mar 31, 2026</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle menu navigation
+        document.querySelectorAll('.navbar-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.navbar-menu a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+                
+                const section = this.getAttribute('href');
+                console.log('Navigating to:', section);
+            });
+        });
+
+        // Handle logout
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                console.log('User logged out');
+                alert('Logged out successfully!');
+                // In a real app, this would redirect to login page
+            }
+        }
+
+        // Animate progress bars on load
+        window.addEventListener('load', () => {
+            const fills = document.querySelectorAll('.progress-fill, .goal-progress-fill, .expense-bar-fill');
+            fills.forEach(fill => {
+                const width = fill.style.width;
+                fill.style.width = '0';
+                setTimeout(() => {
+                    fill.style.width = width;
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>

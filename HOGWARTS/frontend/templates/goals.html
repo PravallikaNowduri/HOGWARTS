@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - Financial Goals</title>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-navy-lighter: #2a3f5f;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-success: #22C55E;
+            --color-danger: #EF4444;
+            --color-warning: #F59E0B;
+            --color-info: #3B82F6;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(212, 175, 55, 0.2);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            width: 50px;
+            height: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            color: var(--color-gold);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .back-btn,
+        .logout-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--color-info) 0%, #0EA5E9 100%);
+            color: var(--color-white);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, var(--color-danger) 0%, #DC2626 100%);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .back-btn:hover,
+        .logout-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-right: 2px solid var(--color-gold);
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 12px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--color-gold);
+            border-left-color: var(--color-gold);
+        }
+
+        .sidebar-menu a.active {
+            background-color: rgba(212, 175, 55, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            border-left-color: var(--color-gold);
+        }
+
+        /* CONTENT AREA */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header-left h2 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .page-header-left p {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .add-goal-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--color-success) 0%, #16A34A 100%);
+            color: var(--color-white);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+
+        .add-goal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+        }
+
+        /* CARDS GRID */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: var(--color-gold);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.95) 0%, rgba(10, 20, 40, 1) 100%);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-title-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+            border-radius: 8px;
+            font-size: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-gold);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--color-success);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.paused {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .card-action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--color-gold);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .card-action-btn:hover {
+            background: rgba(212, 175, 55, 0.25);
+            border-color: var(--color-gold);
+        }
+
+        .card-description {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .progress-section {
+            margin-bottom: 16px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-gold), #E5C158);
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .card-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-gold);
+        }
+
+        .card-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in-out;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border: 2px solid var(--color-gold);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease-in-out;
+            margin: auto;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            color: var(--color-gold);
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: var(--color-gold);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2);
+            color: var(--color-white);
+        }
+
+        .modal-body {
+            color: var(--color-text);
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 3px solid var(--color-gold);
+            border-radius: 6px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 18px;
+            color: var(--color-gold);
+            font-weight: 700;
+        }
+
+        .detail-value.white {
+            color: var(--color-white);
+        }
+
+        .progress-modal {
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .progress-modal-title {
+            font-weight: 600;
+            color: var(--color-gold);
+            margin-bottom: 12px;
+        }
+
+        .progress-modal-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 8px;
+        }
+
+        .progress-modal-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-gold), #E5C158);
+            border-radius: 6px;
+        }
+
+        .progress-modal-text {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            text-align: center;
+        }
+
+        .tips-section {
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .tips-title {
+            font-weight: 600;
+            color: var(--color-gold);
+            margin-bottom: 12px;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            font-size: 13px;
+            color: var(--color-text);
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .tips-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--color-success);
+            font-weight: bold;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .modal-btn.edit {
+            background: linear-gradient(135deg, var(--color-gold) 0%, #E5C158 100%);
+            color: var(--color-navy);
+        }
+
+        .modal-btn.edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+        }
+
+        .modal-btn.delete {
+            background: linear-gradient(135deg, var(--color-danger) 0%, #DC2626 100%);
+            color: var(--color-white);
+        }
+
+        .modal-btn.delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        /* FORM MODAL */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-gold);
+            font-size: 13px;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--color-text);
+            border-radius: 6px;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--color-gold);
+            background: rgba(212, 175, 55, 0.08);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-save,
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, var(--color-success) 0%, #16A34A 100%);
+            color: var(--color-white);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-cancel {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--color-gold);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-cancel:hover {
+            background: rgba(212, 175, 55, 0.25);
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-navy-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-gold);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E5C158;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .header {
+                padding: 16px 20px;
+            }
+
+            .header-title h1 {
+                font-size: 24px;
+            }
+
+            .sidebar {
+                width: 200px;
+                padding: 16px;
+            }
+
+            .content {
+                padding: 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid var(--color-gold);
+                display: flex;
+                overflow-x: auto;
+                padding: 12px;
+                max-height: 60px;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                gap: 8px;
+                white-space: nowrap;
+            }
+
+            .sidebar-menu li {
+                margin-bottom: 0;
+            }
+
+            .sidebar-menu a {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-right {
+                gap: 12px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .page-header-left h2 {
+                font-size: 24px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .back-btn,
+            .logout-btn {
+                width: 100%;
+            }
+
+            .modal-content {
+                padding: 24px;
+                max-width: 90vw;
+            }
+
+            .detail-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .add-goal-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px;
+            }
+
+            .header-title h1 {
+                font-size: 20px;
+            }
+
+            .back-btn,
+            .logout-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+
+            .modal-title {
+                font-size: 20px;
+            }
+
+            .card-actions {
+                flex-direction: column;
+            }
+
+            .card-action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <a href="{{ url_for('dashboard') }}" style="display: block; cursor: pointer; text-decoration: none;">
+                <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/a279e29e-206b-441a-acc3-a3dc038c81f9"
+                    alt="Logo" class="header-logo">
+            </a>
+            <div class="header-title">
+                <h1>GryffinTwin</h1>
+                <p>Financial Goals</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-name">{{ user_name }}</div>
+                <div class="user-email">{{ user_email }}</div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-btn" style="text-decoration: none; display: inline-block;">⚡
+                Logout</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('dashboard') }}">📊 Dashboard</a></li>
+                <li><a href="{{ url_for('expenses') }}">💳 Expenses</a></li>
+                <li><a href="{{ url_for('security') }}">🛡️ Security</a></li>
+                <li><a href="{{ url_for('goals') }}" class="active">🎯 Goals</a></li>
+                <li><a href="{{ url_for('analytics') }}">📈 Analytics</a></li>
+                <li><a href="{{ url_for('portfolio') }}">💼 Portfolio</a></li>
+                <li><a href="{{ url_for('myfam') }}">👨‍👩‍👧‍👦 MyFam</a></li>
+
+            </ul>
+        </aside>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <div class="page-header">
+                <div class="page-header-left">
+                    <h2>🎯 Financial Goals</h2>
+                    <p>Click on any goal card to view detailed information</p>
+                </div>
+                <button class="add-goal-btn" onclick="showAddGoalForm()">+ Add New Goal</button>
+            </div>
+
+            <!-- GOALS CARDS (CLICKABLE) -->
+            <div class="cards-grid" id="goalsContainer">
+                <!-- Emergency Fund Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-section">
+                            <div class="card-icon">🛡️</div>
+                            <div>
+                                <div class="card-title">Emergency Fund</div>
+                                <span class="status-badge">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-description">Build a safety net for unexpected expenses</div>
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span>68%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 68%;"></div>
+                        </div>
+                    </div>
+                    <div class="card-value">$10,200 / $15,000</div>
+                    <div class="card-label">Target Amount: $15,000</div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="showModal('emergency')">📋 View</button>
+                        <button class="card-action-btn" onclick="editGoal('emergency')">✏️ Edit</button>
+                    </div>
+                </div>
+
+                <!-- Vacation Fund Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-section">
+                            <div class="card-icon">✈️</div>
+                            <div>
+                                <div class="card-title">Vacation Fund</div>
+                                <span class="status-badge">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-description">Save for an amazing trip around Europe</div>
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span>45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%;"></div>
+                        </div>
+                    </div>
+                    <div class="card-value">$3,600 / $8,000</div>
+                    <div class="card-label">Target Amount: $8,000</div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="showModal('vacation')">📋 View</button>
+                        <button class="card-action-btn" onclick="editGoal('vacation')">✏️ Edit</button>
+                    </div>
+                </div>
+
+                <!-- Home Down Payment Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-section">
+                            <div class="card-icon">🏠</div>
+                            <div>
+                                <div class="card-title">Home Down Payment</div>
+                                <span class="status-badge">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-description">Save for the perfect first home in the city</div>
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span>32%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 32%;"></div>
+                        </div>
+                    </div>
+                    <div class="card-value">$16,000 / $50,000</div>
+                    <div class="card-label">Target Amount: $50,000</div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="showModal('home')">📋 View</button>
+                        <button class="card-action-btn" onclick="editGoal('home')">✏️ Edit</button>
+                    </div>
+                </div>
+
+                <!-- Car Purchase Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-section">
+                            <div class="card-icon">🚗</div>
+                            <div>
+                                <div class="card-title">Car Purchase</div>
+                                <span class="status-badge paused">Paused</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-description">Save for a reliable electric vehicle</div>
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span>28%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 28%;"></div>
+                        </div>
+                    </div>
+                    <div class="card-value">$9,800 / $35,000</div>
+                    <div class="card-label">Target Amount: $35,000</div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="showModal('car')">📋 View</button>
+                        <button class="card-action-btn" onclick="editGoal('car')">✏️ Edit</button>
+                    </div>
+                </div>
+
+                <!-- Professional Development Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-section">
+                            <div class="card-icon">📚</div>
+                            <div>
+                                <div class="card-title">Professional Dev</div>
+                                <span class="status-badge">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-description">Invest in courses and certifications for growth</div>
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span>82%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 82%;"></div>
+                        </div>
+                    </div>
+                    <div class="card-value">$4,100 / $5,000</div>
+                    <div class="card-label">Target Amount: $5,000</div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="showModal('development')">📋 View</button>
+                        <button class="card-action-btn" onclick="editGoal('development')">✏️ Edit</button>
+                    </div>
+                </div>
+
+                <!-- Retirement Savings Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-section">
+                            <div class="card-icon">🏖️</div>
+                            <div>
+                                <div class="card-title">Retirement Savings</div>
+                                <span class="status-badge">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-description">Build long-term wealth for retirement</div>
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span>18%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 18%;"></div>
+                        </div>
+                    </div>
+                    <div class="card-value">$90,000 / $500,000</div>
+                    <div class="card-label">Target Amount: $500,000</div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="showModal('retirement')">📋 View</button>
+                        <button class="card-action-btn" onclick="editGoal('retirement')">✏️ Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- Emergency Fund Modal -->
+    <div class="modal" id="modal-emergency">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🛡️ Emergency Fund</div>
+                <button class="close-btn" onclick="closeModal('emergency')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Goal Name</span>
+                        <span class="detail-value white">Emergency Fund</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">Active</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Target Amount</span>
+                        <span class="detail-value white">$15,000</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Saved</span>
+                        <span class="detail-value">$10,200</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Amount Remaining</span>
+                        <span class="detail-value white">$4,800</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Progress</span>
+                        <span class="detail-value">68%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Monthly Contribution</span>
+                        <span class="detail-value white">$500</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Estimated Completion</span>
+                        <span class="detail-value white">10 months</span>
+                    </div>
+                </div>
+                <div class="progress-modal">
+                    <div class="progress-modal-title">Progress to Goal</div>
+                    <div class="progress-modal-bar">
+                        <div class="progress-modal-fill" style="width: 68%;"></div>
+                    </div>
+                    <div class="progress-modal-text">$10,200 of $15,000 saved (68%)</div>
+                </div>
+                <div class="tips-section">
+                    <div class="tips-title">💡 Tips to Reach Your Goal</div>
+                    <ul class="tips-list">
+                        <li>Aim to save 3-6 months of expenses</li>
+                        <li>Keep emergency fund in a separate account</li>
+                        <li>Don't withdraw except for emergencies</li>
+                        <li>You'll reach your goal in ~10 months!</li>
+                    </ul>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-btn edit" onclick="editGoal('emergency')">✏️ Edit Goal</button>
+                    <button class="modal-btn delete" onclick="deleteGoal('emergency')">🗑️ Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vacation Fund Modal -->
+    <div class="modal" id="modal-vacation">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">✈️ Vacation Fund</div>
+                <button class="close-btn" onclick="closeModal('vacation')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Goal Name</span>
+                        <span class="detail-value white">Vacation Fund</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">Active</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Target Amount</span>
+                        <span class="detail-value white">$8,000</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Saved</span>
+                        <span class="detail-value">$3,600</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Amount Remaining</span>
+                        <span class="detail-value white">$4,400</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Progress</span>
+                        <span class="detail-value">45%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Monthly Contribution</span>
+                        <span class="detail-value white">$550</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Trip Date</span>
+                        <span class="detail-value white">Summer 2025</span>
+                    </div>
+                </div>
+                <div class="progress-modal">
+                    <div class="progress-modal-title">Progress to Goal</div>
+                    <div class="progress-modal-bar">
+                        <div class="progress-modal-fill" style="width: 45%;"></div>
+                    </div>
+                    <div class="progress-modal-text">$3,600 of $8,000 saved (45%)</div>
+                </div>
+                <div class="tips-section">
+                    <div class="tips-title">✨ Travel Savings Tips</div>
+                    <ul class="tips-list">
+                        <li>Book flights early for better deals</li>
+                        <li>Use credit card rewards for travel</li>
+                        <li>Stay in budget-friendly accommodations</li>
+                        <li>You're on track for your 2025 trip!</li>
+                    </ul>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-btn edit" onclick="editGoal('vacation')">✏️ Edit Goal</button>
+                    <button class="modal-btn delete" onclick="deleteGoal('vacation')">🗑️ Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Home Down Payment Modal -->
+    <div class="modal" id="modal-home">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🏠 Home Down Payment</div>
+                <button class="close-btn" onclick="closeModal('home')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Goal Name</span>
+                        <span class="detail-value white">Home Down Payment</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">Active</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Target Amount</span>
+                        <span class="detail-value white">$50,000</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Saved</span>
+                        <span class="detail-value">$16,000</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Amount Remaining</span>
+                        <span class="detail-value white">$34,000</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Progress</span>
+                        <span class="detail-value">32%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Monthly Contribution</span>
+                        <span class="detail-value white">$1,200</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Estimated Timeline</span>
+                        <span class="detail-value white">28-32 months</span>
+                    </div>
+                </div>
+                <div class="progress-modal">
+                    <div class="progress-modal-title">Progress to Goal</div>
+                    <div class="progress-modal-bar">
+                        <div class="progress-modal-fill" style="width: 32%;"></div>
+                    </div>
+                    <div class="progress-modal-text">$16,000 of $50,000 saved (32%)</div>
+                </div>
+                <div class="tips-section">
+                    <div class="tips-title">🏡 Home Buying Tips</div>
+                    <ul class="tips-list">
+                        <li>20% down payment avoids PMI</li>
+                        <li>Improve credit score before applying</li>
+                        <li>Get pre-approved for mortgage</li>
+                        <li>Keep down payment in high-yield savings</li>
+                    </ul>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-btn edit" onclick="editGoal('home')">✏️ Edit Goal</button>
+                    <button class="modal-btn delete" onclick="deleteGoal('home')">🗑️ Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Car Purchase Modal -->
+    <div class="modal" id="modal-car">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🚗 Car Purchase</div>
+                <button class="close-btn" onclick="closeModal('car')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Goal Name</span>
+                        <span class="detail-value white">Car Purchase</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value" style="color: var(--color-warning);">Paused</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Target Amount</span>
+                        <span class="detail-value white">$35,000</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Saved</span>
+                        <span class="detail-value">$9,800</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Amount Remaining</span>
+                        <span class="detail-value white">$25,200</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Progress</span>
+                        <span class="detail-value">28%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Vehicle Type</span>
+                        <span class="detail-value white">Electric Vehicle</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Paused Since</span>
+                        <span class="detail-value white">June 2025</span>
+                    </div>
+                </div>
+                <div class="progress-modal">
+                    <div class="progress-modal-title">Progress to Goal</div>
+                    <div class="progress-modal-bar">
+                        <div class="progress-modal-fill" style="width: 28%;"></div>
+                    </div>
+                    <div class="progress-modal-text">$9,800 of $35,000 saved (28%)</div>
+                </div>
+                <div class="tips-section">
+                    <div class="tips-title">🚙 When You Resume</div>
+                    <ul class="tips-list">
+                        <li>Check EV incentives & tax credits</li>
+                        <li>Compare electric vehicle models</li>
+                        <li>Consider charging infrastructure</li>
+                        <li>Resume contributions when ready</li>
+                    </ul>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-btn edit" onclick="editGoal('car')">✏️ Edit Goal</button>
+                    <button class="modal-btn delete" onclick="deleteGoal('car')">🗑️ Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Development Modal -->
+    <div class="modal" id="modal-development">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📚 Professional Development</div>
+                <button class="close-btn" onclick="closeModal('development')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Goal Name</span>
+                        <span class="detail-value white">Professional Development</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">Active</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Target Amount</span>
+                        <span class="detail-value white">$5,000</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Saved</span>
+                        <span class="detail-value">$4,100</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Amount Remaining</span>
+                        <span class="detail-value white">$900</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Progress</span>
+                        <span class="detail-value">82%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Monthly Contribution</span>
+                        <span class="detail-value white">$600</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Estimated Completion</span>
+                        <span class="detail-value white">2 months</span>
+                    </div>
+                </div>
+                <div class="progress-modal">
+                    <div class="progress-modal-title">Progress to Goal</div>
+                    <div class="progress-modal-bar">
+                        <div class="progress-modal-fill" style="width: 82%;"></div>
+                    </div>
+                    <div class="progress-modal-text">$4,100 of $5,000 saved (82%)</div>
+                </div>
+                <div class="tips-section">
+                    <div class="tips-title">🎓 Career Growth Tips</div>
+                    <ul class="tips-list">
+                        <li>Almost there! You're 82% of the way!</li>
+                        <li>Look for online certifications</li>
+                        <li>Consider industry-recognized courses</li>
+                        <li>Invest in your future earning potential</li>
+                    </ul>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-btn edit" onclick="editGoal('development')">✏️ Edit Goal</button>
+                    <button class="modal-btn delete" onclick="deleteGoal('development')">🗑️ Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Retirement Savings Modal -->
+    <div class="modal" id="modal-retirement">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🏖️ Retirement Savings</div>
+                <button class="close-btn" onclick="closeModal('retirement')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Goal Name</span>
+                        <span class="detail-value white">Retirement Savings</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">Active</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Target Amount</span>
+                        <span class="detail-value white">$500,000</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Saved</span>
+                        <span class="detail-value">$90,000</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Amount Remaining</span>
+                        <span class="detail-value white">$410,000</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Progress</span>
+                        <span class="detail-value">18%</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Monthly Contribution</span>
+                        <span class="detail-value white">$1,500</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Target Retirement Age</span>
+                        <span class="detail-value white">Age 65</span>
+                    </div>
+                </div>
+                <div class="progress-modal">
+                    <div class="progress-modal-title">Progress to Goal</div>
+                    <div class="progress-modal-bar">
+                        <div class="progress-modal-fill" style="width: 18%;"></div>
+                    </div>
+                    <div class="progress-modal-text">$90,000 of $500,000 saved (18%)</div>
+                </div>
+                <div class="tips-section">
+                    <div class="tips-title">🎯 Retirement Planning Tips</div>
+                    <ul class="tips-list">
+                        <li>Maximize 401(k) or IRA contributions</li>
+                        <li>Take advantage of employer matching</li>
+                        <li>Diversify your investment portfolio</li>
+                        <li>Review and increase contributions annually</li>
+                    </ul>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-btn edit" onclick="editGoal('retirement')">✏️ Edit Goal</button>
+                    <button class="modal-btn delete" onclick="deleteGoal('retirement')">🗑️ Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Goal Form Modal -->
+    <div class="modal" id="modal-form">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="formTitle">Add New Goal</div>
+                <button class="close-btn" onclick="closeModal('form')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="goalForm">
+                    <div class="form-group">
+                        <label class="form-label">Goal Name *</label>
+                        <input type="text" class="form-input" id="goalName" placeholder="e.g., Emergency Fund" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="goalDescription"
+                            placeholder="Describe your goal..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Target Amount ($) *</label>
+                            <input type="number" class="form-input" id="targetAmount" placeholder="15000" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Current Saved ($)</label>
+                            <input type="number" class="form-input" id="currentSaved" placeholder="10200">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Monthly Contribution ($)</label>
+                            <input type="number" class="form-input" id="monthlyContribution" placeholder="500">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="goalStatus">
+                                <option value="Active">Active</option>
+                                <option value="Paused">Paused</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Target Date</label>
+                        <input type="date" class="form-input" id="targetDate">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-save" onclick="saveGoal()">💾 Save Goal</button>
+                        <button type="button" class="btn-cancel" onclick="closeModal('form')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Server-side auth handled by Flask
+        /*
+        // Check authentication on page load
+        window.addEventListener('load', function () {
+            const sessionData = sessionStorage.getItem('gryffinTwinSession') || localStorage.getItem('gryffinTwinSession');
+
+            if (!sessionData) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = JSON.parse(sessionData);
+            document.getElementById('userNameDisplay').textContent = user.name;
+            document.getElementById('userEmailDisplay').textContent = user.email;
+        });
+        */
+
+        function showModal(modalId) {
+            const modal = document.getElementById('modal-' + modalId);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById('modal-' + modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function showAddGoalForm() {
+            showModal('form');
+        }
+
+        function editGoal(goalId) {
+            alert('Edit Goal feature coming soon!');
+        }
+
+        function saveGoal() {
+            alert('Goal saved (simulation)');
+            closeModal('form');
+        }
+
+        function deleteGoal(goalId) {
+            if (confirm('Are you sure you want to delete this goal? This action cannot be undone.')) {
+                alert(`Goal has been deleted successfully! ❌`);
+                closeModal(goalId);
+                // Here you would typically send this to your backend
+            }
+        }
+
+        // Helper functions to get goal data
+        function getGoalName(goalId) {
+            const names = { emergency: 'Emergency Fund', vacation: 'Vacation Fund', home: 'Home Down Payment', car: 'Car Purchase', development: 'Professional Development', retirement: 'Retirement Savings' };
+            return names[goalId] || '';
+        }
+
+        function getTargetAmount(goalId) {
+            const amounts = { emergency: 15000, vacation: 8000, home: 50000, car: 35000, development: 5000, retirement: 500000 };
+            return amounts[goalId] || '';
+        }
+
+        function getCurrentSaved(goalId) {
+            const saved = { emergency: 10200, vacation: 3600, home: 16000, car: 9800, development: 4100, retirement: 90000 };
+            return saved[goalId] || '';
+        }
+
+        function getGoalStatus(goalId) {
+            return goalId === 'car' ? 'Paused' : 'Active';
+        }
+
+        // Close modal when clicking outside content
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            }
+        });
+
+        function goBack() {
+            window.location.href = 'dashboard.html';
+        }
+
+        function navigateTo(page) {
+            const pageMap = {
+                'dashboard': 'dashboard.html',
+                'expenses': 'expenses.html',
+                'security': 'security.html',
+                'goals': 'goals.html',
+                'analytics': 'analytics.html',
+                'myfam': 'myfam.html',
+                'portfolio': 'portfolio.html'
+            };
+
+            if (pageMap[page]) {
+                window.location.href = pageMap[page];
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('gryffinTwinSession');
+                localStorage.removeItem('gryffinTwinSession');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

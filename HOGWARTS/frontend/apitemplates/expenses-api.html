@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - Expenses</title>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-success: #22C55E;
+            --color-danger: #EF4444;
+            --color-warning: #F59E0B;
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(212, 175, 55, 0.2);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            color: var(--color-gold);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--color-danger) 0%, #DC2626 100%);
+            color: var(--color-white);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-right: 2px solid var(--color-gold);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 12px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--color-gold);
+            border-left-color: var(--color-gold);
+        }
+
+        .sidebar-menu a.active {
+            background-color: rgba(212, 175, 55, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            border-left-color: var(--color-gold);
+        }
+
+        /* CONTENT AREA */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title h2 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        /* STAT CARDS */
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-gold);
+        }
+
+        /* TABLE */
+        .table-section {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 20px 24px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .section-header h3 {
+            font-size: 16px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(212, 175, 55, 0.05);
+            padding: 16px 24px;
+            text-align: left;
+            font-size: 13px;
+            color: var(--color-gold);
+            font-weight: 600;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        td {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background-color: rgba(212, 175, 55, 0.05);
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--color-text-secondary);
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-bottom: 2px solid var(--color-gold);
+                display: flex;
+                overflow-x: auto;
+                padding: 12px;
+                max-height: 60px;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                gap: 8px;
+                white-space: nowrap;
+            }
+
+            .content {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/a279e29e-206b-441a-acc3-a3dc038c81f9" alt="Logo" class="header-logo" onclick="navigateTo('dashboard')">
+            <div class="header-title">
+                <h1>GryffinTwin</h1>
+                <p>Expense Tracker</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="logout-btn" onclick="handleLogout()">⚡ Logout</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a onclick="navigateTo('dashboard')">📊 Dashboard</a></li>
+                <li><a class="active" onclick="navigateTo('expenses')">💳 Expenses</a></li>
+                <li><a onclick="navigateTo('security')">🛡️ Security</a></li>
+                <li><a onclick="navigateTo('goals')">🎯 Goals</a></li>
+                <li><a onclick="navigateTo('analytics')">📈 Analytics</a></li>
+            </ul>
+        </aside>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Expense Tracker</h2>
+                    <p>Monitor and manage your spending</p>
+                </div>
+            </div>
+
+            <!-- STAT CARDS -->
+            <div class="stat-cards" id="statCards">
+                <div class="loading">Loading expense data...</div>
+            </div>
+
+            <!-- EXPENSES TABLE -->
+            <div class="table-section">
+                <div class="section-header">
+                    <h3>📊 Recent Expenses</h3>
+                </div>
+                <div id="expensesTable">
+                    <div class="loading">Loading expenses...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:8000/api';
+
+        window.addEventListener('load', async function() {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = 'login-api.html';
+                return;
+            }
+
+            await loadExpenses();
+        });
+
+        async function loadExpenses() {
+            const token = localStorage.getItem('access_token');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/expenses`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 401) {
+                    logout();
+                    return;
+                }
+
+                const data = await response.json();
+                renderExpenseData(data);
+            } catch (error) {
+                console.error('Error loading expenses:', error);
+                document.getElementById('statCards').innerHTML = `<div class="loading">Error loading data</div>`;
+                document.getElementById('expensesTable').innerHTML = `<div class="loading">Error: ${error.message}</div>`;
+            }
+        }
+
+        function renderExpenseData(data) {
+            // Render stat cards
+            const statCardsHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Total Expenses</div>
+                    <div class="stat-value">$${(data.total_expenses || 3240).toLocaleString()}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Monthly Budget</div>
+                    <div class="stat-value">$${(data.monthly_budget || 4200).toLocaleString()}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Remaining</div>
+                    <div class="stat-value">$${(data.remaining_budget || 960).toLocaleString()}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Budget Used</div>
+                    <div class="stat-value">${data.budget_percentage || 77}%</div>
+                </div>
+            `;
+
+            document.getElementById('statCards').innerHTML = statCardsHTML;
+
+            // Render expenses table
+            const expenses = data.expenses || [];
+            let tableHTML = '<table>';
+            tableHTML += '<thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead>';
+            tableHTML += '<tbody>';
+
+            expenses.forEach(expense => {
+                tableHTML += `
+                    <tr>
+                        <td>${new Date(expense.date).toLocaleDateString()}</td>
+                        <td>${expense.category}</td>
+                        <td>${expense.description}</td>
+                        <td>-$${expense.amount.toFixed(2)}</td>
+                        <td>${expense.status}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += '</tbody></table>';
+            document.getElementById('expensesTable').innerHTML = tableHTML;
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                logout();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('token_type');
+            localStorage.removeItem('user');
+            window.location.href = 'login-api.html';
+        }
+
+        function navigateTo(page) {
+            const pageMap = {
+                'dashboard': 'dashboard-api.html',
+                'expenses': 'expenses-api.html',
+                'security': 'security-api.html',
+                'goals': 'goals-api.html',
+                'analytics': 'analytics-api.html'
+            };
+
+            if (pageMap[page]) {
+                window.location.href = pageMap[page];
+            }
+        }
+    </script>
+</body>
+</html>

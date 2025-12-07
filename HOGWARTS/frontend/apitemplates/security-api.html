@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - Security</title>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-success: #22C55E;
+            --color-danger: #EF4444;
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(212, 175, 55, 0.2);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            color: var(--color-gold);
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--color-danger) 0%, #DC2626 100%);
+            color: var(--color-white);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-right: 2px solid var(--color-gold);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--color-gold);
+            border-left-color: var(--color-gold);
+        }
+
+        .sidebar-menu a.active {
+            background-color: rgba(212, 175, 55, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            border-left-color: var(--color-gold);
+        }
+
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title h2 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .status-card {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+        }
+
+        .status-card:hover {
+            border-color: var(--color-gold);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .status-title {
+            font-size: 16px;
+            color: var(--color-gold);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .status-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-white);
+            margin-bottom: 8px;
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--color-success);
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--color-text-secondary);
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-bottom: 2px solid var(--color-gold);
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                gap: 8px;
+                white-space: nowrap;
+            }
+
+            .content {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/a279e29e-206b-441a-acc3-a3dc038c81f9" alt="Logo" class="header-logo" onclick="navigateTo('dashboard')">
+            <div class="header-title">
+                <h1>GryffinTwin</h1>
+                <p>Security & Fraud Detection</p>
+            </div>
+        </div>
+        <button class="logout-btn" onclick="handleLogout()">⚡ Logout</button>
+    </header>
+
+    <div class="main-content">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a onclick="navigateTo('dashboard')">📊 Dashboard</a></li>
+                <li><a onclick="navigateTo('expenses')">💳 Expenses</a></li>
+                <li><a class="active" onclick="navigateTo('security')">🛡️ Security</a></li>
+                <li><a onclick="navigateTo('goals')">🎯 Goals</a></li>
+                <li><a onclick="navigateTo('analytics')">📈 Analytics</a></li>
+            </ul>
+        </aside>
+
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Security & Fraud Detection</h2>
+                    <p>Monitor your account security and detect suspicious activities</p>
+                </div>
+            </div>
+
+            <div class="security-grid" id="securityGrid">
+                <div class="loading">Loading security data...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:8000/api';
+        window.addEventListener('load', async function() {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = 'login-api.html';
+                return;
+            }
+
+            await loadSecurityData();
+        });
+
+        async function loadSecurityData() {
+            const token = localStorage.getItem('access_token');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/security`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 401) {
+                    logout();
+                    return;
+                }
+
+                const data = await response.json();
+                renderSecurityCards(data);
+            } catch (error) {
+                console.error('Error loading security data:', error);
+                document.getElementById('securityGrid').innerHTML = `<div class="loading">Error: ${error.message}</div>`;
+            }
+        }
+
+        function renderSecurityCards(data) {
+            const cardsHTML = `
+                <div class="status-card">
+                    <div class="status-title">🛡️ Overall Security</div>
+                    <div class="status-value">${data.overall_security || 'Excellent'}</div>
+                    <div class="status-label">Account protection level</div>
+                    <span class="badge badge-success">✓ Secure</span>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-title">🔐 Login Activity</div>
+                    <div class="status-value">${data.login_activity || 'Normal'}</div>
+                    <div class="status-label">Last 30 days</div>
+                    <span class="badge badge-success">✓ All devices verified</span>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-title">🚨 Fraud Alerts</div>
+                    <div class="status-value">${data.fraud_alerts || 0}</div>
+                    <div class="status-label">Suspicious activities</div>
+                    <span class="badge badge-success">✓ No threats</span>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-title">🔒 Password Strength</div>
+                    <div class="status-value">${data.password_strength || 'Strong'}</div>
+                    <div class="status-label">Last changed 90 days ago</div>
+                    <span class="badge badge-success">✓ Secure</span>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-title">📱 Two-Factor Auth</div>
+                    <div class="status-value">${data.two_factor_auth ? 'Enabled' : 'Disabled'}</div>
+                    <div class="status-label">SMS & Email verified</div>
+                    <span class="badge badge-success">✓ Active</span>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-title">💳 Card Monitoring</div>
+                    <div class="status-value">${data.monitored_cards || 4} Cards</div>
+                    <div class="status-label">Protected & monitored</div>
+                    <span class="badge badge-success">✓ Active</span>
+                </div>
+            `;
+
+            document.getElementById('securityGrid').innerHTML = cardsHTML;
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                logout();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('token_type');
+            localStorage.removeItem('user');
+            window.location.href = 'login-api.html';
+        }
+
+        function navigateTo(page) {
+            const pageMap = {
+                'dashboard': 'dashboard-api.html',
+                'expenses': 'expenses-api.html',
+                'security': 'security-api.html',
+                'goals': 'goals-api.html',
+                'analytics': 'analytics-api.html'
+            };
+
+            if (pageMap[page]) {
+                window.location.href = pageMap[page];
+            }
+        }
+    </script>
+</body>
+</html>

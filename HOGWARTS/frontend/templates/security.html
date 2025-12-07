@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - Security</title>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-navy-lighter: #2a3f5f;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-success: #22C55E;
+            --color-danger: #EF4444;
+            --color-warning: #F59E0B;
+            --color-info: #3B82F6;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(212, 175, 55, 0.2);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            width: 50px;
+            height: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: pointer;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            color: var(--color-gold);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--color-danger) 0%, #DC2626 100%);
+            color: var(--color-white);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-right: 2px solid var(--color-gold);
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 12px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--color-gold);
+            border-left-color: var(--color-gold);
+        }
+
+        .sidebar-menu a.active {
+            background-color: rgba(212, 175, 55, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            border-left-color: var(--color-gold);
+        }
+
+        /* CONTENT AREA */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title h2 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .page-title p {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        /* SECURITY STATUS */
+        .security-status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .status-card {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .status-card:hover {
+            border-color: var(--color-gold);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .status-card.clicked {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
+            border-color: var(--color-gold);
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .status-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 24px;
+        }
+
+        .status-icon.secure {
+            background: rgba(34, 197, 94, 0.2);
+        }
+
+        .status-icon.warning {
+            background: rgba(245, 158, 11, 0.2);
+        }
+
+        .status-icon.danger {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .status-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-gold);
+        }
+
+        .status-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-white);
+            margin-bottom: 8px;
+            margin-top: 12px;
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--color-success);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+        }
+
+        /* DETAIL PANEL */
+        .detail-panel {
+            display: none;
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.95) 0%, rgba(10, 20, 40, 0.98) 100%);
+            border: 2px solid var(--color-gold);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 40px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .detail-panel.active {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .detail-header h3 {
+            font-size: 20px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .detail-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-item {
+            padding: 16px;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+        }
+
+        .detail-item-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .detail-item-value {
+            font-size: 18px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        /* SECURITY FEATURES */
+        .security-features {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 20px 24px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .section-header h3 {
+            font-size: 16px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .features-list {
+            padding: 24px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            margin-top: 4px;
+        }
+
+        .feature-content h4 {
+            font-size: 14px;
+            color: var(--color-gold);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .feature-content p {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ACTION BUTTON */
+        .action-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--color-gold) 0%, #E5C158 100%);
+            color: var(--color-navy);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4);
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-navy-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-gold);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E5C158;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .content {
+                padding: 24px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid var(--color-gold);
+                display: flex;
+                overflow-x: auto;
+                padding: 12px;
+                max-height: 60px;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                gap: 8px;
+                white-space: nowrap;
+            }
+
+            .sidebar-menu li {
+                margin-bottom: 0;
+            }
+
+            .sidebar-menu a {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .security-status-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px;
+            }
+
+            .header-title h1 {
+                font-size: 20px;
+            }
+
+            .page-title h2 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .status-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .detail-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <a href="{{ url_for('dashboard') }}" style="display: block; cursor: pointer; text-decoration: none;">
+                <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/a279e29e-206b-441a-acc3-a3dc038c81f9"
+                    alt="Logo" class="header-logo">
+            </a>
+            <div class="header-title">
+                <h1>GryffinTwin</h1>
+                <p>Security & Fraud Detection</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-name">{{ user_name }}</div>
+                <div class="user-email">{{ user_email }}</div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-btn" style="text-decoration: none; display: inline-block;">⚡
+                Logout</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('dashboard') }}">📊 Dashboard</a></li>
+                <li><a href="{{ url_for('expenses') }}">💳 Expenses</a></li>
+                <li><a href="{{ url_for('security') }}" class="active">🛡️ Security</a></li>
+                <li><a href="{{ url_for('goals') }}">🎯 Goals</a></li>
+                <li><a href="{{ url_for('analytics') }}">📈 Analytics</a></li>
+                <li><a href="{{ url_for('portfolio') }}">💼 Portfolio</a></li>
+                <li><a href="{{ url_for('myfam') }}">👨‍👩‍👧‍👦 MyFam</a></li>
+            </ul>
+        </aside>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Security & Fraud Detection</h2>
+                    <p>Monitor your account security and detect suspicious activities</p>
+                </div>
+            </div>
+
+            <!-- DETAIL PANEL -->
+            <div class="detail-panel" id="detailPanel">
+                <div class="detail-header">
+                    <h3 id="detailTitle">Details</h3>
+                    <button class="close-btn" onclick="closeDetailPanel()">✕ Close</button>
+                </div>
+                <div class="detail-content" id="detailContent"></div>
+            </div>
+
+            <!-- SECURITY STATUS -->
+            <div class="security-status-grid">
+                <div class="status-card" onclick="showCardDetails(this, 'Overall Security', {
+                    'Protection Level': 'Account protection level',
+                    'Status': 'Secure',
+                    'Last Verified': 'Today',
+                    'Risk Score': '2/100',
+                    'Encrypted': 'Yes',
+                    'Backup': 'Enabled'
+                })">
+                    <div class="status-header">
+                        <div class="status-icon secure">🛡️</div>
+                        <div class="status-title">Overall Security</div>
+                    </div>
+                    <div class="status-value">Excellent</div>
+                    <div class="status-label">Account protection level</div>
+                    <span class="status-badge badge-success">✓ Secure</span>
+                </div>
+
+                <div class="status-card" onclick="showCardDetails(this, 'Login Activity', {
+                    'Status': 'Normal',
+                    'Period': 'Last 30 days',
+                    'Verified Devices': '3',
+                    'Suspicious Attempts': '0',
+                    'Last Login': '2 hours ago',
+                    'Location': 'Home'
+                })">
+                    <div class="status-header">
+                        <div class="status-icon secure">🔐</div>
+                        <div class="status-title">Login Activity</div>
+                    </div>
+                    <div class="status-value">Normal</div>
+                    <div class="status-label">Last 30 days</div>
+                    <span class="status-badge badge-success">✓ All devices verified</span>
+                </div>
+
+                <div class="status-card" onclick="showCardDetails(this, 'Fraud Alerts', {
+                    'Total Alerts': '0',
+                    'Suspicious Activities': 'None',
+                    'Threats Detected': '0',
+                    'Monitored Transactions': '234',
+                    'Flagged Items': '0',
+                    'Action Required': 'None'
+                })">
+                    <div class="status-header">
+                        <div class="status-icon secure">🚨</div>
+                        <div class="status-title">Fraud Alerts</div>
+                    </div>
+                    <div class="status-value">0</div>
+                    <div class="status-label">Suspicious activities</div>
+                    <span class="status-badge badge-success">✓ No threats</span>
+                </div>
+
+                <div class="status-card" onclick="showCardDetails(this, 'Password Strength', {
+                    'Current Strength': 'Strong',
+                    'Last Changed': '90 days ago',
+                    'Length': '16 characters',
+                    'Special Characters': 'Yes',
+                    'Numbers': 'Yes',
+                    'Recommendation': 'Update recommended'
+                })">
+                    <div class="status-header">
+                        <div class="status-icon secure">🔒</div>
+                        <div class="status-title">Password Strength</div>
+                    </div>
+                    <div class="status-value">Strong</div>
+                    <div class="status-label">Last changed 90 days ago</div>
+                    <span class="status-badge badge-warning">⚠️ Update recommended</span>
+                </div>
+
+                <div class="status-card" onclick="showCardDetails(this, 'Two-Factor Auth', {
+                    'Status': 'Enabled',
+                    'SMS Verified': 'Yes',
+                    'Email Verified': 'Yes',
+                    'Backup Codes': '8 remaining',
+                    'Last Used': '1 day ago',
+                    'Active': 'Yes'
+                })">
+                    <div class="status-header">
+                        <div class="status-icon secure">📱</div>
+                        <div class="status-title">Two-Factor Auth</div>
+                    </div>
+                    <div class="status-value">Enabled</div>
+                    <div class="status-label">SMS & Email verified</div>
+                    <span class="status-badge badge-success">✓ Active</span>
+                </div>
+
+                <div class="status-card" onclick="showCardDetails(this, 'Card Monitoring', {
+                    'Total Cards': '4',
+                    'Protected Cards': '4',
+                    'Monitored': 'Yes',
+                    'Active Status': 'Active',
+                    'Fraud Detection': 'Enabled',
+                    'Last Update': '1 hour ago'
+                })">
+                    <div class="status-header">
+                        <div class="status-icon secure">💳</div>
+                        <div class="status-title">Card Monitoring</div>
+                    </div>
+                    <div class="status-value">4 Cards</div>
+                    <div class="status-label">Protected & monitored</div>
+                    <span class="status-badge badge-success">✓ Active</span>
+                </div>
+            </div>
+
+            <!-- SECURITY FEATURES -->
+            <div class="security-features">
+                <div class="section-header">
+                    <h3>🛡️ Active Security Features</h3>
+                </div>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-content">
+                            <h4>Real-Time Fraud Monitoring</h4>
+                            <p>Advanced AI-powered system monitors all transactions 24/7 for suspicious patterns and
+                                unusual activities.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-content">
+                            <h4>Biometric Authentication</h4>
+                            <p>Use fingerprint or facial recognition for enhanced account security and quick login.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-content">
+                            <h4>Device Management</h4>
+                            <p>View all connected devices and manage their access permissions with one click.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-content">
+                            <h4>Transaction Alerts</h4>
+                            <p>Receive instant notifications for all transactions above your set thresholds.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-content">
+                            <h4>SSL Encryption</h4>
+                            <p>Bank-grade encryption protects all your data in transit and at rest.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-content">
+                            <h4>Suspicious Activity Alerts</h4>
+                            <p>Immediate notifications for unusual login attempts, withdrawals, or account changes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Server-side auth handled by Flask
+        /*
+        // Check authentication on page load
+        const API_BASE_URL = 'http://localhost:8000/api';
+        window.addEventListener('load', function() { ... });
+        function handleLogout() { ... }
+        function navigateTo(page) { ... }
+        */
+
+        const API_BASE_URL = 'http://localhost:8000/api';
+
+
+        function showCardDetails(cardElement, title, data) {
+            const detailPanel = document.getElementById('detailPanel');
+            const detailTitle = document.getElementById('detailTitle');
+            const detailContent = document.getElementById('detailContent');
+
+            // Clear previous details
+            detailContent.innerHTML = '';
+
+            // Set title
+            detailTitle.textContent = title;
+
+            // Populate details
+            Object.entries(data).forEach(([key, value]) => {
+                const detailItem = document.createElement('div');
+                detailItem.className = 'detail-item';
+                detailItem.innerHTML = `
+                    <div class="detail-item-label">${key}</div>
+                    <div class="detail-item-value">${value}</div>
+                `;
+                detailContent.appendChild(detailItem);
+            });
+
+            // Show panel
+            detailPanel.classList.add('active');
+
+            // Mark card as clicked
+            document.querySelectorAll('.status-card').forEach(card => {
+                card.classList.remove('clicked');
+            });
+            cardElement.classList.add('clicked');
+
+            // Scroll to detail panel
+            detailPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function closeDetailPanel() {
+            const detailPanel = document.getElementById('detailPanel');
+            detailPanel.classList.remove('active');
+            document.querySelectorAll('.status-card').forEach(card => {
+                card.classList.remove('clicked');
+            });
+        }
+    </script>
+</body>
+
+</html>

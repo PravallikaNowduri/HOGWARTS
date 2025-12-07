@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - Login</title>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-danger: #EF4444;
+            --color-success: #22C55E;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(212, 175, 55, 0.2);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* LEFT SIDE - BRANDING */
+        .login-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-left::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .login-left::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -30%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .brand-container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .brand-logo-container {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 40px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+            border: 3px solid var(--color-gold);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
+            transition: var(--transition);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .brand-logo {
+            width: 140px;
+            height: 140px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .brand-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--color-gold);
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            text-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .brand-subtitle {
+            font-size: 16px;
+            color: var(--color-text-secondary);
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .brand-tagline {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            font-style: italic;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        /* RIGHT SIDE - LOGIN FORM */
+        .login-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            padding: 40px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid var(--color-gold);
+            border-radius: 16px;
+            padding: 48px 40px;
+            box-shadow: var(--shadow-lg), inset 0 0 20px rgba(212, 175, 55, 0.05);
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-header h1 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .login-header p {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            color: var(--color-text);
+            transition: var(--transition);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .form-input::placeholder {
+            color: var(--color-text-secondary);
+            opacity: 0.7;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-gold);
+            background-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        .form-input:hover {
+            border-color: var(--color-gold);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 32px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: var(--color-text-secondary);
+            transition: var(--transition);
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--color-gold);
+        }
+
+        .remember-me:hover {
+            color: var(--color-gold);
+        }
+
+        .forgot-password {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .forgot-password:hover {
+            color: var(--color-gold);
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-navy);
+            background: linear-gradient(135deg, var(--color-gold) 0%, #E5C158 100%);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+            margin-bottom: 16px;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(212, 175, 55, 0.4);
+        }
+
+        .login-btn:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .signup-link {
+            text-align: center;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
+
+        .signup-link a {
+            color: var(--color-gold);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            display: none;
+            padding: 12px;
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--color-danger);
+            border-radius: 8px;
+            color: var(--color-danger);
+            font-size: 13px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .success-message {
+            display: none;
+            padding: 12px;
+            background-color: rgba(34, 197, 94, 0.1);
+            border: 1px solid var(--color-success);
+            border-radius: 8px;
+            color: var(--color-success);
+            font-size: 13px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .demo-credentials {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .demo-credentials p {
+            margin-bottom: 8px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .login-left {
+                padding: 30px;
+            }
+
+            .brand-title {
+                font-size: 36px;
+            }
+
+            .brand-logo-container {
+                width: 140px;
+                height: 140px;
+                margin-bottom: 30px;
+            }
+
+            .brand-logo {
+                width: 110px;
+                height: 110px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .login-left {
+                min-height: 300px;
+                padding: 30px;
+            }
+
+            .login-right {
+                flex: 1;
+                padding: 30px;
+            }
+
+            .brand-logo-container {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 20px;
+                border-width: 2px;
+            }
+
+            .brand-logo {
+                width: 90px;
+                height: 90px;
+            }
+
+            .brand-title {
+                font-size: 28px;
+                margin-bottom: 12px;
+            }
+
+            .login-card {
+                padding: 40px 30px;
+                border-width: 2px;
+            }
+
+            .login-header h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-left {
+                display: none;
+            }
+
+            .login-right {
+                min-height: 100vh;
+                justify-content: flex-start;
+                padding-top: 60px;
+            }
+
+            .login-card {
+                padding: 30px 20px;
+                max-width: 100%;
+            }
+
+            .brand-title {
+                font-size: 24px;
+            }
+
+            .login-header h1 {
+                font-size: 20px;
+            }
+
+            .remember-forgot {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LEFT SIDE - BRANDING -->
+    <div class="login-left">
+        <div class="brand-container">
+            <div class="brand-logo-container">
+                <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/a279e29e-206b-441a-acc3-a3dc038c81f9" alt="GryffinTwin Logo" class="brand-logo">
+            </div>
+            <h2 class="brand-title">GryffinTwin</h2>
+            <p class="brand-subtitle">Financial Magic Unleashed</p>
+            <p class="brand-tagline">"Your Digital Twin for Financial Mastery"</p>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE - LOGIN FORM -->
+    <div class="login-right">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>Welcome Back</h1>
+                <p>Enter the halls of financial wisdom</p>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="form-input" 
+                        placeholder="you@gryffindor.com" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-input" 
+                        placeholder="Enter your wand password" 
+                        required
+                    >
+                </div>
+
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#forgot" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">⚡ Cast Spell</button>
+            </form>
+
+            <div class="signup-link">
+                Don't have an account? <a href="signup.html">Join the Order</a>
+            </div>
+
+            <!-- Demo Credentials -->
+            <div class="demo-credentials">
+                <p><strong>Demo Credentials:</strong></p>
+                <p>Email: user@example.com</p>
+                <p>Password: password123</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulated user database (in real app, this would be backend authentication)
+        const API_BASE_URL = 'http://localhost:8000/api';
+        const validUsers = [
+            { email: 'user@example.com', password: 'password123', name: 'Harry Potter' },
+            { email: 'hermione@gryffindor.com', password: 'gryffindor123', name: 'Hermione Granger' },
+            { email: 'ron@gryffindor.com', password: 'potter123', name: 'Ron Weasley' }
+        ];
+
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const loginBtn = document.getElementById('loginBtn');
+
+            // Reset messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+
+            // Validation
+            if (!email || !password) {
+                showError('⚠️ Please fill in all fields');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('⚠️ Please enter a valid email address');
+                return;
+            }
+
+            // Password length validation
+            if (password.length < 6) {
+                showError('⚠️ Password must be at least 6 characters');
+                return;
+            }
+
+            // Authenticate user
+            const user = validUsers.find(u => u.email === email && u.password === password);
+
+            if (!user) {
+                showError('⚠️ Invalid email or password');
+                return;
+            }
+
+            // Login successful
+            loginBtn.disabled = true;
+            loginBtn.textContent = '✨ Casting...';
+
+            showSuccess('✨ Authentication successful. Redirecting to Dashboard...');
+
+            // Store user session (localStorage or sessionStorage)
+            const sessionData = {
+                email: user.email,
+                name: user.name,
+                loginTime: new Date().toISOString(),
+                rememberMe: document.getElementById('rememberMe').checked
+            };
+
+            if (document.getElementById('rememberMe').checked) {
+                localStorage.setItem('gryffinTwinSession', JSON.stringify(sessionData));
+            } else {
+                sessionStorage.setItem('gryffinTwinSession', JSON.stringify(sessionData));
+            }
+
+            // Redirect to dashboard after 1.5 seconds
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+        }
+
+        function showSuccess(message) {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = message;
+            successMessage.classList.add('show');
+        }
+
+        // Allow Enter key to submit form
+        document.getElementById('loginForm').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin(e);
+            }
+        });
+
+        // Clear error on input
+        document.getElementById('email').addEventListener('input', function() {
+            document.getElementById('errorMessage').classList.remove('show');
+        });
+
+        document.getElementById('password').addEventListener('input', function() {
+            document.getElementById('errorMessage').classList.remove('show');
+        });
+
+        // Check if user is already logged in
+        window.addEventListener('load', function() {
+            const sessionData = sessionStorage.getItem('gryffinTwinSession') || localStorage.getItem('gryffinTwinSession');
+            if (sessionData) {
+                // User is already logged in, redirect to dashboard
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-navy-lighter: #2a3f5f;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-success: #22C55E;
+            --color-danger: #EF4444;
+            --color-warning: #F59E0B;
+            --color-info: #3B82F6;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(212, 175, 55, 0.2);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            width: 50px;
+            height: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            color: var(--color-gold);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--color-danger) 0%, #DC2626 100%);
+            color: var(--color-white);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border-right: 2px solid var(--color-gold);
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 12px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--color-gold);
+            border-left-color: var(--color-gold);
+        }
+
+        .sidebar-menu a.active {
+            background-color: rgba(212, 175, 55, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            border-left-color: var(--color-gold);
+        }
+
+        /* CONTENT AREA */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-header h2 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .page-header p {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        /* CARDS GRID */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            border-color: var(--color-gold);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.95) 0%, rgba(10, 20, 40, 1) 100%);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+            border-radius: 8px;
+            font-size: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .card-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        .card-value {
+            font-size: 28px;
+            color: var(--color-white);
+            font-weight: 700;
+            margin: 16px 0 8px 0;
+        }
+
+        .card-description {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--color-success);
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in-out;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, var(--color-navy) 100%);
+            border: 2px solid var(--color-gold);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease-in-out;
+            margin: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            color: var(--color-gold);
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 32px;
+            color: var(--color-gold);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2);
+            color: var(--color-white);
+        }
+
+        .modal-body {
+            color: var(--color-text);
+        }
+
+        /* TOTAL BALANCE MODAL STYLES */
+        .balance-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .summary-item {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            color: var(--color-gold);
+            font-weight: 700;
+        }
+
+        .accounts-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+
+        .accounts-table thead {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .accounts-table th {
+            text-align: left;
+            padding: 12px;
+            color: var(--color-gold);
+            font-weight: 600;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .accounts-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            color: var(--color-text);
+            font-size: 13px;
+        }
+
+        .accounts-table tr:hover {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .account-name {
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .account-balance {
+            color: var(--color-white);
+            font-weight: 600;
+        }
+
+        .account-status {
+            display: inline-block;
+            padding: 4px 8px;
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--color-success);
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .balance-breakdown {
+            margin-top: 24px;
+        }
+
+        .breakdown-title {
+            font-size: 14px;
+            color: var(--color-gold);
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .breakdown-item {
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 3px solid var(--color-gold);
+            border-radius: 4px;
+            padding: 12px;
+        }
+
+        .breakdown-label {
+            font-size: 11px;
+            color: var(--color-text-secondary);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .breakdown-value {
+            font-size: 16px;
+            color: var(--color-gold);
+            font-weight: 700;
+        }
+
+        /* FINANCIAL SCORE MODAL STYLES */
+        .score-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .score-circle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .score-canvas {
+            max-width: 250px;
+            width: 100%;
+            height: auto;
+        }
+
+        .score-info {
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 48px;
+            color: var(--color-gold);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .score-max {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .score-rating {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--color-success);
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .score-rating.excellent {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--color-gold);
+        }
+
+        .score-details {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .detail-item {
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 3px solid var(--color-gold);
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            color: var(--color-white);
+            font-weight: 600;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            margin-bottom: 32px;
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .chart-container canvas {
+            max-height: 300px;
+        }
+
+        .factors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .factor-card {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .factor-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .factor-value {
+            font-size: 20px;
+            color: var(--color-gold);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .factor-percentage {
+            font-size: 12px;
+            color: var(--color-success);
+        }
+
+        /* TRANSACTIONS */
+        .transactions-section {
+            margin-top: 40px;
+        }
+
+        .transactions-section h3 {
+            font-size: 18px;
+            color: var(--color-gold);
+            margin-bottom: 16px;
+        }
+
+        .transaction-item {
+            background: linear-gradient(135deg, rgba(26, 37, 64, 0.9) 0%, rgba(10, 20, 40, 0.95) 100%);
+            border-left: 3px solid var(--color-info);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-title {
+            font-size: 14px;
+            color: var(--color-white);
+            font-weight: 600;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 2px;
+        }
+
+        .transaction-amount {
+            font-size: 16px;
+            color: var(--color-gold);
+            font-weight: 700;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-navy-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-gold);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E5C158;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .header {
+                padding: 16px 20px;
+            }
+
+            .header-title h1 {
+                font-size: 24px;
+            }
+
+            .sidebar {
+                width: 200px;
+                padding: 16px;
+            }
+
+            .content {
+                padding: 24px;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .score-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid var(--color-gold);
+                display: flex;
+                overflow-x: auto;
+                padding: 12px;
+                max-height: 60px;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                gap: 8px;
+                white-space: nowrap;
+            }
+
+            .sidebar-menu li {
+                margin-bottom: 0;
+            }
+
+            .sidebar-menu a {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-right {
+                gap: 12px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .page-header h2 {
+                font-size: 24px;
+            }
+
+            .modal-content {
+                padding: 24px;
+                max-width: 95vw;
+            }
+
+            .score-container {
+                grid-template-columns: 1fr;
+            }
+
+            .balance-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .factors-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px;
+            }
+
+            .header-title h1 {
+                font-size: 20px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .card-title {
+                font-size: 14px;
+            }
+
+            .card-value {
+                font-size: 24px;
+            }
+
+            .modal-title {
+                font-size: 24px;
+            }
+
+            .factors-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .balance-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .score-value {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/a279e29e-206b-441a-acc3-a3dc038c81f9"
+                alt="Logo" class="header-logo">
+            <div class="header-title">
+                <h1>GryffinTwin</h1>
+                <p>Manage your finances with magical precision</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-name">{{ user_name }}</div>
+                <div class="user-email">{{ user_email }}</div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-btn" style="text-decoration: none; display: inline-block;">⚡
+                Logout</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('dashboard') }}" class="active">📊 Dashboard</a></li>
+                <li><a href="{{ url_for('expenses') }}">💳 Expenses</a></li>
+                <li><a href="{{ url_for('security') }}">🛡️ Security</a></li>
+                <li><a href="{{ url_for('goals') }}">🎯 Goals</a></li>
+                <li><a href="{{ url_for('analytics') }}">📈 Analytics</a></li>
+                <li><a href="{{ url_for('portfolio') }}">💼 Portfolio</a></li>
+                <li><a href="{{ url_for('myfam') }}">👨‍👩‍👧‍👦 MyFam</a></li>
+            </ul>
+        </aside>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <div class="page-header">
+                <h2>✨ Welcome to GryffinTwin</h2>
+                <p>Manage your finances with magical precision</p>
+            </div>
+
+            <!-- DASHBOARD CARDS -->
+            <div class="cards-grid">
+                <!-- Total Balance Card (Shows Balance Modal) -->
+                <div class="card" onclick="showTotalBalanceModal(event)">
+                    <div class="card-header">
+                        <div class="card-icon">💰</div>
+                        <div>
+                            <div class="card-title">Total Balance</div>
+                        </div>
+                    </div>
+                    <div class="card-value">$24,580</div>
+                    <div class="card-label">Across all accounts</div>
+                    <div class="card-description">
+                        <span class="card-badge">↑ 12.5%</span>
+                        <span>this month</span>
+                    </div>
+                </div>
+
+                <!-- Expenses Card -->
+                <div class="card" onclick="showExpensesModal(event)">
+                    <div class="card-header">
+                        <div class="card-icon">💳</div>
+                        <div>
+                            <div class="card-title">Expenses</div>
+                        </div>
+                    </div>
+                    <div class="card-value">$3,240</div>
+                    <div class="card-label">This month</div>
+                    <div class="card-description">
+                        <span class="card-badge"
+                            style="background: rgba(245, 158, 11, 0.2); color: var(--color-warning);">⚠️ 78%</span>
+                        <span>of budget</span>
+                    </div>
+                </div>
+
+                <!-- Investments Card -->
+                <div class="card" onclick="showInvestmentsModal(event)">
+                    <div class="card-header">
+                        <div class="card-icon">📈</div>
+                        <div>
+                            <div class="card-title">Investments</div>
+                        </div>
+                    </div>
+                    <div class="card-value">$12,450</div>
+                    <div class="card-label">Total portfolio value</div>
+                    <div class="card-description">
+                        <span class="card-badge">↑ 8.2%</span>
+                        <span>YTD</span>
+                    </div>
+                </div>
+
+                <!-- Goals Progress Card -->
+                <div class="card" onclick="showGoalsModal(event)">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <div>
+                            <div class="card-title">Goals Progress</div>
+                        </div>
+                    </div>
+                    <div class="card-value">68%</div>
+                    <div class="card-label">Towards your targets</div>
+                    <div class="card-description">
+                        <span>4 goals in progress</span>
+                    </div>
+                </div>
+
+                <!-- Security Status Card -->
+                <div class="card" onclick="showSecurityModal(event)">
+                    <div class="card-header">
+                        <div class="card-icon">🛡️</div>
+                        <div>
+                            <div class="card-title">Security Status</div>
+                        </div>
+                    </div>
+                    <div class="card-value">Secure</div>
+                    <div class="card-label">All systems protected</div>
+                    <div class="card-description">
+                        <span class="card-badge">✓ No threats detected</span>
+                    </div>
+                </div>
+
+                <!-- Financial Score Card (Shows Modal) -->
+                <div class="card" onclick="showFinancialScoreModal(event)">
+                    <div class="card-header">
+                        <div class="card-icon">⭐</div>
+                        <div>
+                            <div class="card-title">Financial Score</div>
+                        </div>
+                    </div>
+                    <div class="card-value">850</div>
+                    <div class="card-label">Out of 1000</div>
+                    <div class="card-description">
+                        <span class="card-badge">↑ Excellent</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRANSACTIONS SECTION -->
+            <div class="transactions-section">
+                <h3>📋 Live Transactions</h3>
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-title">Amazon Purchase</div>
+                        <div class="transaction-date">Today, 2:45 PM</div>
+                    </div>
+                    <div class="transaction-amount">-$156.99</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-title">Salary Deposit</div>
+                        <div class="transaction-date">Yesterday, 10:30 AM</div>
+                    </div>
+                    <div class="transaction-amount" style="color: var(--color-success);">+$4,500.00</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-title">Netflix Subscription</div>
+                        <div class="transaction-date">2 days ago, 3:15 PM</div>
+                    </div>
+                    <div class="transaction-amount">-$15.99</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOTAL BALANCE MODAL -->
+    <div class="modal" id="totalBalanceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">💰 Total Balance Overview</div>
+                <button class="close-btn" onclick="closeTotalBalanceModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Summary Cards -->
+                <div class="balance-summary">
+                    <div class="summary-item">
+                        <div class="summary-label">Total Balance</div>
+                        <div class="summary-value">$24,580.00</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Month Change</div>
+                        <div class="summary-value" style="color: var(--color-success);">+$3,072.50</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Change %</div>
+                        <div class="summary-value" style="color: var(--color-success);">+12.5%</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Active Accounts</div>
+                        <div class="summary-value">4</div>
+                    </div>
+                </div>
+
+                <!-- Accounts Table -->
+                <h3
+                    style="font-size: 14px; color: var(--color-gold); margin-bottom: 16px; margin-top: 24px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    📊 Account Breakdown</h3>
+                <table class="accounts-table">
+                    <thead>
+                        <tr>
+                            <th>Account Name</th>
+                            <th>Type</th>
+                            <th>Balance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="account-name">Checking Account</td>
+                            <td>Checking</td>
+                            <td class="account-balance">$5,230.00</td>
+                            <td><span class="account-status">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td class="account-name">Savings Account</td>
+                            <td>Savings</td>
+                            <td class="account-balance">$12,350.00</td>
+                            <td><span class="account-status">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td class="account-name">Money Market</td>
+                            <td>Money Market</td>
+                            <td class="account-balance">$4,800.00</td>
+                            <td><span class="account-status">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td class="account-name">Business Account</td>
+                            <td>Business</td>
+                            <td class="account-balance">$2,200.00</td>
+                            <td><span class="account-status">Active</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Balance Breakdown -->
+                <div class="balance-breakdown">
+                    <div class="breakdown-title">💹 Balance Distribution</div>
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Cash & Checking</div>
+                            <div class="breakdown-value">$5,230</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Savings & MM</div>
+                            <div class="breakdown-value">$17,150</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Business Funds</div>
+                            <div class="breakdown-value">$2,200</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Liquid Assets %</div>
+                            <div class="breakdown-value">100%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Information -->
+                <div
+                    style="margin-top: 24px; padding: 16px; background: rgba(59, 130, 246, 0.1); border-left: 3px solid var(--color-info); border-radius: 8px;">
+                    <h4 style="font-size: 13px; color: var(--color-gold); margin-bottom: 12px; font-weight: 600;">ℹ️
+                        Account Information</h4>
+                    <ul style="list-style: none; padding: 0; font-size: 13px;">
+                        <li style="margin-bottom: 8px;">✓ Last Updated: Today at 2:45 PM</li>
+                        <li style="margin-bottom: 8px;">✓ Interest Rate: Varying by account type</li>
+                        <li style="margin-bottom: 8px;">✓ FDIC Protected: All accounts covered</li>
+                        <li>✓ Account Alerts: Enabled for all accounts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FINANCIAL SCORE MODAL -->
+    <div class="modal" id="financialScoreModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">⭐ Financial Score & Credit Analysis</div>
+                <button class="close-btn" onclick="closeFinancialScoreModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Score Container -->
+                <div class="score-container">
+                    <!-- Circular Progress Chart -->
+                    <div class="score-circle">
+                        <div class="score-canvas" style="position: relative; width: 250px; height: 250px;">
+                            <canvas id="scoreGaugeChart"></canvas>
+                        </div>
+                        <div class="score-info">
+                            <div class="score-value">850</div>
+                            <div class="score-max">Out of 1000</div>
+                            <div class="score-rating excellent">★ Excellent Credit</div>
+                        </div>
+                    </div>
+
+                    <!-- Score Details -->
+                    <div class="score-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Overall Rating</div>
+                            <div class="detail-value">Excellent (850+)</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Credit Status</div>
+                            <div class="detail-value">Strong & Healthy</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Accounts in Good Standing</div>
+                            <div class="detail-value">12 / 12 (100%)</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Payment History</div>
+                            <div class="detail-value">Perfect (36 months)</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Last Updated</div>
+                            <div class="detail-value">December 7, 2025</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Score Factors Bar Chart -->
+                <div class="chart-container">
+                    <canvas id="scoreFactorsChart"></canvas>
+                </div>
+
+                <!-- Score Components -->
+                <h3 style="font-size: 16px; color: var(--color-gold); margin-bottom: 16px; margin-top: 32px;">📊 Score
+                    Components</h3>
+                <div class="factors-grid">
+                    <div class="factor-card">
+                        <div class="factor-label">Payment History</div>
+                        <div class="factor-value">35%</div>
+                        <div class="factor-percentage">✓ 36/36 On-Time</div>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-label">Credit Utilization</div>
+                        <div class="factor-value">12%</div>
+                        <div class="factor-percentage">✓ Excellent Use</div>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-label">Credit Mix</div>
+                        <div class="factor-value">15%</div>
+                        <div class="factor-percentage">✓ Well Diversified</div>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-label">Account Age</div>
+                        <div class="factor-value">15%</div>
+                        <div class="factor-percentage">✓ 8 Years Average</div>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-label">Inquiries</div>
+                        <div class="factor-value">12%</div>
+                        <div class="factor-percentage">✓ 1 in 6 Months</div>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-label">Collections</div>
+                        <div class="factor-value">11%</div>
+                        <div class="factor-percentage">✓ None</div>
+                    </div>
+                </div>
+
+                <!-- Score Trend Chart -->
+                <div class="chart-container" style="margin-top: 32px;">
+                    <canvas id="scoreTrendChart"></canvas>
+                </div>
+
+                <!-- Recommendations -->
+                <div
+                    style="margin-top: 32px; padding: 20px; background: rgba(34, 197, 94, 0.1); border-left: 3px solid var(--color-success); border-radius: 8px;">
+                    <h3 style="font-size: 14px; color: var(--color-gold); margin-bottom: 12px;">✓ Tips to Maintain Your
+                        Excellent Score</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 8px; font-size: 13px;">✓ Continue making payments on time</li>
+                        <li style="margin-bottom: 8px; font-size: 13px;">✓ Keep credit utilization below 30%</li>
+                        <li style="margin-bottom: 8px; font-size: 13px;">✓ Don't close old credit accounts</li>
+                        <li style="margin-bottom: 8px; font-size: 13px;">✓ Limit new credit inquiries</li>
+                        <li style="font-size: 13px;">✓ Monitor your credit reports regularly</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPENSES MODAL -->
+    <div class="modal" id="expensesModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">💳 Expenses Overview</div>
+                <button class="close-btn" onclick="closeExpensesModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="balance-summary">
+                    <div class="summary-item">
+                        <div class="summary-label">Total Spent</div>
+                        <div class="summary-value">$3,240.00</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Budget</div>
+                        <div class="summary-value">$4,200.00</div>
+                    </div>
+                </div>
+                <div class="transactions-section" style="margin-top: 20px;">
+                    <h3>Recent Expenses</h3>
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-title">Amazon Purchase</div>
+                            <div class="transaction-date">Today, 2:45 PM</div>
+                        </div>
+                        <div class="transaction-amount">-$156.99</div>
+                    </div>
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-title">Netflix Subscription</div>
+                            <div class="transaction-date">2 days ago, 3:15 PM</div>
+                        </div>
+                        <div class="transaction-amount">-$15.99</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <a href="{{ url_for('expenses') }}"
+                        style="color: var(--color-gold); text-decoration: none; font-size: 14px;">View Full Expenses
+                        Report →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INVESTMENTS MODAL -->
+    <div class="modal" id="investmentsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📈 Investments Portfolio</div>
+                <button class="close-btn" onclick="closeInvestmentsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="balance-summary">
+                    <div class="summary-item">
+                        <div class="summary-label">Total Value</div>
+                        <div class="summary-value">$12,450.00</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">YTD Return</div>
+                        <div class="summary-value" style="color: var(--color-success);">+8.2%</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <div class="detail-item" style="margin-bottom: 10px;">
+                        <span class="detail-label">Top Performer</span>
+                        <span class="detail-value">NVDA (+145%)</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Asset Allocation</span>
+                        <span class="detail-value">60% Stocks, 40% Bonds</span>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <a href="{{ url_for('portfolio') }}"
+                        style="color: var(--color-gold); text-decoration: none; font-size: 14px;">View Full Portfolio
+                        →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GOALS MODAL -->
+    <div class="modal" id="goalsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🎯 Financial Goals</div>
+                <button class="close-btn" onclick="closeGoalsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="balance-summary">
+                    <div class="summary-item">
+                        <div class="summary-label">Active Goals</div>
+                        <div class="summary-value">4</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Overall Progress</div>
+                        <div class="summary-value">68%</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="font-size: 14px; color: var(--color-text);">Emergency Fund</span>
+                            <span style="font-size: 14px; color: var(--color-gold);">85%</span>
+                        </div>
+                        <div style="background: rgba(212, 175, 55, 0.2); height: 8px; border-radius: 4px;">
+                            <div style="background: var(--color-gold); width: 85%; height: 100%; border-radius: 4px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="font-size: 14px; color: var(--color-text);">New Car</span>
+                            <span style="font-size: 14px; color: var(--color-gold);">45%</span>
+                        </div>
+                        <div style="background: rgba(212, 175, 55, 0.2); height: 8px; border-radius: 4px;">
+                            <div style="background: var(--color-gold); width: 45%; height: 100%; border-radius: 4px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <a href="{{ url_for('goals') }}"
+                        style="color: var(--color-gold); text-decoration: none; font-size: 14px;">Manage Goals →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECURITY MODAL -->
+    <div class="modal" id="securityModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🛡️ Security Summary</div>
+                <button class="close-btn" onclick="closeSecurityModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+                    <div style="font-size: 24px; color: var(--color-success); font-weight: bold;">System Secure</div>
+                    <div style="color: var(--color-text-secondary);">Last scan: Just now</div>
+                </div>
+                <div class="detail-item" style="margin-bottom: 10px; border-left: 3px solid var(--color-success);">
+                    <span class="detail-label">2-Factor Authentication</span>
+                    <span class="detail-value">Enabled</span>
+                </div>
+                <div class="detail-item" style="margin-bottom: 10px; border-left: 3px solid var(--color-success);">
+                    <span class="detail-label">Login History</span>
+                    <span class="detail-value">No suspicious activity</span>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <a href="{{ url_for('security') }}"
+                        style="color: var(--color-gold); text-decoration: none; font-size: 14px;">Security Settings
+                        →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        let scoreGaugeChart, scoreFactorsChart, scoreTrendChart;
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showTotalBalanceModal(event) {
+            event.preventDefault();
+            document.getElementById('totalBalanceModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTotalBalanceModal() {
+            document.getElementById('totalBalanceModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function showFinancialScoreModal(event) {
+            event.preventDefault();
+            document.getElementById('financialScoreModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Initialize charts after modal is visible
+            setTimeout(() => {
+                initializeCharts();
+            }, 100);
+        }
+
+        function closeFinancialScoreModal() {
+            document.getElementById('financialScoreModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+
+            // Destroy charts to prevent memory leaks
+            if (scoreGaugeChart) scoreGaugeChart.destroy();
+            if (scoreFactorsChart) scoreFactorsChart.destroy();
+            if (scoreTrendChart) scoreTrendChart.destroy();
+        }
+
+        function initializeCharts() {
+            // Score Gauge Chart
+            const gaugeCtx = document.getElementById('scoreGaugeChart');
+            if (gaugeCtx && !scoreGaugeChart) {
+                scoreGaugeChart = new Chart(gaugeCtx, {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [{
+                            data: [850, 150],
+                            backgroundColor: [
+                                '#D4AF37',
+                                'rgba(212, 175, 55, 0.1)'
+                            ],
+                            borderColor: ['#D4AF37', 'transparent'],
+                            borderWidth: 2,
+                            circumference: 180,
+                            rotation: 270
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false }
+                        }
+                    }
+                });
+            }
+
+            // Score Factors Bar Chart
+            const factorsCtx = document.getElementById('scoreFactorsChart');
+            if (factorsCtx && !scoreFactorsChart) {
+                scoreFactorsChart = new Chart(factorsCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Payment\nHistory', 'Credit\nUtilization', 'Credit\nMix', 'Account\nAge', 'Inquiries', 'Collections'],
+                        datasets: [{
+                            label: 'Score Impact (%)',
+                            data: [35, 12, 15, 15, 12, 11],
+                            backgroundColor: [
+                                '#D4AF37',
+                                '#3B82F6',
+                                '#22C55E',
+                                '#F59E0B',
+                                '#8B5CF6',
+                                '#EC4899'
+                            ],
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        indexAxis: 'x',
+                        plugins: {
+                            legend: {
+                                labels: { color: '#E8E8E8', font: { size: 12 } }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 40,
+                                ticks: { color: '#B0B0B0' },
+                                grid: { color: 'rgba(212, 175, 55, 0.1)' }
+                            },
+                            x: {
+                                ticks: { color: '#B0B0B0' },
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Score Trend Chart
+            const trendCtx = document.getElementById('scoreTrendChart');
+            if (trendCtx && !scoreTrendChart) {
+                scoreTrendChart = new Chart(trendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['6 Months Ago', '5 Months Ago', '4 Months Ago', '3 Months Ago', '2 Months Ago', 'Last Month', 'Today'],
+                        datasets: [{
+                            label: 'Financial Score',
+                            data: [720, 750, 775, 800, 825, 840, 850],
+                            borderColor: '#D4AF37',
+                            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#D4AF37',
+                            pointBorderColor: '#E8E8E8',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                labels: { color: '#E8E8E8', font: { size: 12 } }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 700,
+                                max: 900,
+                                ticks: { color: '#B0B0B0' },
+                                grid: { color: 'rgba(212, 175, 55, 0.1)' }
+                            },
+                            x: {
+                                ticks: { color: '#B0B0B0' },
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('totalBalanceModal').addEventListener('click', function (event) {
+            if (event.target === this) {
+                closeTotalBalanceModal();
+            }
+        });
+
+        document.getElementById('financialScoreModal').addEventListener('click', function (event) {
+            if (event.target === this) {
+                closeFinancialScoreModal();
+            }
+        });
+
+        // Expenses Modal
+        function showExpensesModal(event) {
+            event.preventDefault();
+            document.getElementById('expensesModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeExpensesModal() {
+            document.getElementById('expensesModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Investments Modal
+        function showInvestmentsModal(event) {
+            event.preventDefault();
+            document.getElementById('investmentsModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeInvestmentsModal() {
+            document.getElementById('investmentsModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Goals Modal
+        function showGoalsModal(event) {
+            event.preventDefault();
+            document.getElementById('goalsModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeGoalsModal() {
+            document.getElementById('goalsModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Security Modal
+        function showSecurityModal(event) {
+            event.preventDefault();
+            document.getElementById('securityModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeSecurityModal() {
+            document.getElementById('securityModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modals with Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeTotalBalanceModal();
+                closeFinancialScoreModal();
+                closeExpensesModal();
+                closeInvestmentsModal();
+                closeGoalsModal();
+                closeSecurityModal();
+            }
+        });
+
+        // Close modals when clicking outside
+        const modals = ['totalBalanceModal', 'financialScoreModal', 'expensesModal', 'investmentsModal', 'goalsModal', 'securityModal'];
+        modals.forEach(id => {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.addEventListener('click', function (event) {
+                    if (event.target === this) {
+                        this.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+        });
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('gryffinTwinSession');
+                localStorage.removeItem('gryffinTwinSession');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

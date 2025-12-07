@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GryffinTwin - Fraud Detector</title>
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-navy: #0A1428;
+            --color-navy-light: #1a2540;
+            --color-white: #FFFFFF;
+            --color-text: #E8E8E8;
+            --color-text-secondary: #B0B0B0;
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-danger: #EF4444;
+            --color-info: #3B82F6;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .navbar-brand:hover {
+            transform: translateY(-2px);
+        }
+
+        .navbar-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--color-gold);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--color-navy);
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .navbar-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-gold);
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            list-style: none;
+        }
+
+        .navbar-menu a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .navbar-menu a:hover,
+        .navbar-menu a.active {
+            color: var(--color-gold);
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .navbar-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 16px;
+            right: 16px;
+            height: 2px;
+            background: var(--color-gold);
+            border-radius: 1px;
+        }
+
+        .logout-btn {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid var(--color-danger);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background-color: var(--color-danger);
+            color: var(--color-white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* MAIN CONTENT */
+        .container {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        /* SECURITY STATUS BADGE */
+        .security-status {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, rgba(26, 37, 64, 0.5) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-icon {
+            font-size: 48px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .status-content h2 {
+            font-size: 20px;
+            color: var(--color-success);
+            margin-bottom: 4px;
+        }
+
+        .status-content p {
+            color: var(--color-text-secondary);
+            font-size: 13px;
+        }
+
+        .status-badge {
+            margin-left: auto;
+            padding: 8px 16px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--color-success);
+            border-radius: 20px;
+            color: var(--color-success);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* FILTERS */
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--color-gold);
+            color: var(--color-gold);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--color-gold);
+            color: var(--color-navy);
+        }
+
+        /* ALERTS GRID */
+        .alerts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* ALERT CARD */
+        .alert-card {
+            background: linear-gradient(135deg, var(--color-navy-light) 0%, rgba(26, 37, 64, 0.5) 100%);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border-left: 4px solid;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-card.danger {
+            border-left-color: var(--color-danger);
+            border-top: 1px solid rgba(239, 68, 68, 0.2);
+            border-right: 1px solid rgba(239, 68, 68, 0.1);
+            border-bottom: 1px solid rgba(239, 68, 68, 0.1);
+        }
+
+        .alert-card.warning {
+            border-left-color: var(--color-warning);
+            border-top: 1px solid rgba(245, 158, 11, 0.2);
+            border-right: 1px solid rgba(245, 158, 11, 0.1);
+            border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+        }
+
+        .alert-card.info {
+            border-left-color: var(--color-info);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            border-right: 1px solid rgba(59, 130, 246, 0.1);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .alert-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .alert-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .alert-icon {
+            font-size: 28px;
+            min-width: 40px;
+        }
+
+        .alert-title-group {
+            flex: 1;
+        }
+
+        .alert-type {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .alert-card.danger .alert-type {
+            color: var(--color-danger);
+        }
+
+        .alert-card.warning .alert-type {
+            color: var(--color-warning);
+        }
+
+        .alert-card.info .alert-type {
+            color: var(--color-info);
+        }
+
+        .alert-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 4px;
+        }
+
+        .alert-time {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .alert-description {
+            font-size: 14px;
+            color: var(--color-text);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .alert-details {
+            background-color: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 12px;
+        }
+
+        .alert-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: var(--color-text-secondary);
+        }
+
+        .alert-detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-detail-label {
+            font-weight: 500;
+        }
+
+        .alert-detail-value {
+            color: var(--color-gold);
+            font-weight: 600;
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-gold) 0%, #E5C158 100%);
+            color: var(--color-navy);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--color-gold);
+            color: var(--color-gold);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .alerts-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+
+            .security-status {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .status-badge {
+                margin-left: 0;
+                margin-top: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .navbar-menu {
+                gap: 20px;
+            }
+
+            .navbar-menu a {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .alerts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                justify-content: center;
+            }
+
+            .alert-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0 15px;
+                height: 60px;
+            }
+
+            .navbar-title {
+                font-size: 18px;
+            }
+
+            .navbar-menu {
+                gap: 15px;
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .alert-card {
+                padding: 16px;
+            }
+
+            .alert-icon {
+                font-size: 24px;
+            }
+
+            .alert-title {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="navbar-logo">⚡</div>
+            <div class="navbar-title">GryffinTwin</div>
+        </div>
+        <ul class="navbar-menu">
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#expenses">Expenses</a></li>
+            <li><a href="#fraud" class="active">Fraud Watch</a></li>
+            <li><a href="#goals">Goals</a></li>
+        </ul>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Fraud Detector</h1>
+            <p>Real-time security monitoring and threat detection | December 6, 2025</p>
+        </div>
+
+        <!-- SECURITY STATUS -->
+        <div class="security-status">
+            <div class="status-icon">✓</div>
+            <div class="status-content">
+                <h2>Account Secure</h2>
+                <p>Your account is being monitored 24/7 with advanced AI detection</p>
+            </div>
+            <div class="status-badge">5 Active Alerts</div>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterAlerts('all')">All Alerts</button>
+            <button class="filter-btn" onclick="filterAlerts('danger')">🔴 Danger</button>
+            <button class="filter-btn" onclick="filterAlerts('warning')">🟡 Warning</button>
+            <button class="filter-btn" onclick="filterAlerts('info')">🔵 Info</button>
+        </div>
+
+        <!-- ALERTS GRID -->
+        <div class="alerts-grid" id="alertsGrid">
+            <!-- Alerts will be rendered here -->
+        </div>
+    </div>
+
+    <script>
+        // Fraud alerts data
+        const fraudAlerts = [
+            {
+                id: 1,
+                type: "Unusual Transaction",
+                severity: "warning",
+                icon: "💳",
+                title: "Large Transaction at Unusual Time",
+                description: "Transaction of £1,500 detected at 2:14 AM from an unusual location",
+                timestamp: "Dec 6, 2025 - 02:14 AM",
+                details: {
+                    "Location": "London, UK",
+                    "Amount": "£1,500",
+                    "Merchant": "Electronics Store",
+                    "Time": "2:14 AM"
+                }
+            },
+            {
+                id: 2,
+                type: "New Device Login",
+                severity: "danger",
+                icon: "🖥️",
+                title: "New Device Login Detected",
+                description: "Your account was accessed from a new device. If this wasn't you, secure your account immediately",
+                timestamp: "Dec 6, 2025 - 11:45 AM",
+                details: {
+                    "Device": "Chrome on Windows 10",
+                    "Location": "Manchester, UK",
+                    "IP Address": "192.168.1.XX",
+                    "Status": "Suspicious"
+                }
+            },
+            {
+                id: 3,
+                type: "Spending Pattern Anomaly",
+                severity: "warning",
+                icon: "📊",
+                title: "Unusual Spending Pattern",
+                description: "Your spending is 45% higher than your monthly average. This could indicate fraudulent activity",
+                timestamp: "Dec 6, 2025 - 01:30 PM",
+                details: {
+                    "Average Spend": "$1,600/month",
+                    "Current Spend": "$2,340",
+                    "Increase": "45%",
+                    "Category": "Shopping"
+                }
+            },
+            {
+                id: 4,
+                type: "Duplicate Charge",
+                severity: "info",
+                icon: "⚠️",
+                title: "Potential Duplicate Charge",
+                description: "Two identical transactions detected within 5 minutes. This might be a processing error",
+                timestamp: "Dec 5, 2025 - 09:22 AM",
+                details: {
+                    "Merchant": "Coffee Shop",
+                    "Amount": "$12.50 x2",
+                    "Time Gap": "5 minutes",
+                    "Status": "Under Review"
+                }
+            },
+            {
+                id: 5,
+                type: "Geographic Anomaly",
+                severity: "warning",
+                icon: "🌍",
+                title: "Impossible Travel Detected",
+                description: "Transaction from Paris detected 2 hours after a London purchase. This travel is physically impossible",
+                timestamp: "Dec 5, 2025 - 08:45 PM",
+                details: {
+                    "First Location": "London, UK",
+                    "Second Location": "Paris, France",
+                    "Time Difference": "2 hours",
+                    "Distance": "215 miles"
+                }
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        // Render alerts
+        function renderAlerts() {
+            const alertsGrid = document.getElementById('alertsGrid');
+            
+            const filteredAlerts = currentFilter === 'all' 
+                ? fraudAlerts 
+                : fraudAlerts.filter(alert => alert.severity === currentFilter);
+
+            if (filteredAlerts.length === 0) {
+                alertsGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="empty-state-icon">✓</div>
+                        <h3>No Alerts</h3>
+                        <p>Your account is secure. No ${currentFilter} severity alerts detected.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            alertsGrid.innerHTML = filteredAlerts.map(alert => `
+                <div class="alert-card ${alert.severity}">
+                    <div class="alert-header">
+                        <div class="alert-icon">${alert.icon}</div>
+                        <div class="alert-title-group">
+                            <div class="alert-type">${alert.type}</div>
+                            <div class="alert-title">${alert.title}</div>
+                            <div class="alert-time">${alert.timestamp}</div>
+                        </div>
+                    </div>
+
+                    <div class="alert-description">
+                        ${alert.description}
+                    </div>
+
+                    <div class="alert-details">
+                        ${Object.entries(alert.details).map(([key, value]) => `
+                            <div class="alert-detail-item">
+                                <span class="alert-detail-label">${key}</span>
+                                <span class="alert-detail-value">${value}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="alert-actions">
+                        <button class="btn btn-primary" onclick="resolveAlert(${alert.id})">Verify</button>
+                        <button class="btn btn-secondary" onclick="dismissAlert(${alert.id})">Dismiss</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter alerts
+        function filterAlerts(severity) {
+            currentFilter = severity;
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderAlerts();
+        }
+
+        // Resolve alert
+        function resolveAlert(id) {
+            const alert = fraudAlerts.find(a => a.id === id);
+            alert.severity = 'info';
+            alert.type = 'Verified & Resolved';
+            alert.icon = '✓';
+            renderAlerts();
+            alert_notification('Alert verified and marked as safe!');
+        }
+
+        // Dismiss alert
+        function dismissAlert(id) {
+            fraudAlerts = fraudAlerts.filter(a => a.id !== id);
+            renderAlerts();
+            alert_notification('Alert dismissed');
+        }
+
+        // Alert notification
+        function alert_notification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: var(--color-gold);
+                color: var(--color-navy);
+                padding: 16px 24px;
+                border-radius: 8px;
+                font-weight: 600;
+                z-index: 9999;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Handle logout
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                console.log('User logged out');
+                alert('Logged out successfully!');
+            }
+        }
+
+        // Menu navigation
+        document.querySelectorAll('.navbar-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.navbar-menu a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            renderAlerts();
+        });
+    </script>
+</body>
+</html>
